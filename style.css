@@ -59,10 +59,14 @@ body {
 
 .start-inner {
   position: relative;
-  z-index: 10;        /* Поверх всех слоев */
+  z-index: 100; /* Самый высокий приоритет для кликов */
   text-align: center;
   width: 100%;
+  max-width: 600px; /* Чтобы текст не растягивался слишком сильно */
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .start-title {
