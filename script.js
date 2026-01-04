@@ -16,72 +16,93 @@ function playSnd(id) {
 
 // Данные сцен
 const scenes = {
-    scene1: {
-        title: 'Arrival at Ravenhill',
-        text: 'You stand before the gates of Ravenhill Estate. The air is cold, and the silence is unsettling. A single light flickers in the upstairs window.',
-        choices: [
-            { text: 'Enter the Hall', next: 'scene2_hall' },
-            { text: 'Look around the garden', next: 'scene_garden' }
-        ]
-    },
-    scene2_hall: {
-        title: 'The Grand Hall',
-        text: 'The door creaks open. Inside, a dusty table holds an old diary. You hear a faint whisper from the shadows.',
-        choices: [
-            { text: 'Open the diary', next: 'scene1' }
-        ]
-    }
+    const scenes = {
+  scene1: {
+    title: 'Episode I · The Gates',
+    text: 'You stand before the towering iron gates of Ravenhill. A cold wind rustles the dead leaves. To your left, a <span class="vocab-word" title="заброшенный">neglected</span> garden; ahead, the manor itself.',
+    english: '<b>Neglected</b> — заброшенный, находящийся в запустении.',
+    choices: [
+      { text: 'Enter the Grand Hall', next: 'scene2_hall' },
+      { text: 'Investigate the Garden', next: 'scene2_garden' }
+    ]
+  },
+  scene2_hall: {
+    title: 'The Grand Hall',
+    text: 'The heavy oak door <span class="vocab-word" title="скрипеть">creaks</span> open. Dust motes dance in your flashlight beam. On a marble table lies a silver key and a leather-bound diary.',
+    english: '<b>Creak</b> — скрипеть (о двери, поле).',
+    choices: [
+      { text: 'Take the Silver Key', next: 'scene3_key' },
+      { text: 'Read the Diary', next: 'scene2_diary' }
+    ]
+  },
+  scene2_diary: {
+    title: 'Elizabeth\'s Confession',
+    text: 'The diary belongs to Elizabeth Ravenhill. The last entry says: "He is not who he claims to be. The shadows are moving."',
+    english: '<b>Entry</b> — запись (в дневнике или журнале).',
+    sound: 'diary-voice',
+    choices: [
+      { text: 'Look for Elizabeth', next: 'scene3_stairs' },
+      { text: 'Go back to Hall', next: 'scene2_hall' }
+    ]
+  },
+  scene2_garden: {
+    title: 'The Silent Garden',
+    text: 'Among the withered roses, you find a stone statue of a weeping woman. Her eyes seem to follow you. You notice a hidden cellar door.',
+    english: '<b>Withered</b> — увядший, высохший.',
+    choices: [
+      { text: 'Open the cellar door', next: 'scene3_cellar' },
+      { text: 'Return to gates', next: 'scene1' }
+    ]
+  },
+  scene3_key: {
+    title: 'The Silver Key',
+    text: 'You pocket the key. Suddenly, the front door slams shut. You are trapped inside. A faint piano music starts playing upstairs.',
+    english: '<b>Slam shut</b> — захлопнуться с силой.',
+    choices: [
+      { text: 'Follow the music', next: 'scene3_stairs' }
+    ]
+  }
 };
 
-// Кнопка СТАРТ
-if ($('start-btn')) {
-    $('start-btn').onclick = () => {
-        console.log("Start clicked");
-        playSnd('clickSound');
-        
-        // 1. Прячем стартовый экран
-        if ($('start-screen')) {
-            $('start-screen').style.opacity = '0';
-            setTimeout(() => $('start-screen').style.display = 'none', 600);
-        }
-
-        // 2. Показываем игру
-        const game = $('game-content');
-        if (game) {
-            game.classList.add('visible');
-            playSnd('bgMusic');
-            renderScene('scene1');
-        }
-    };
-}
-
-// Функция рендера
+// ОБНОВЛЕННАЯ ФУНКЦИЯ РЕНДЕРА
 function renderScene(id) {
-    const data = scenes[id];
-    if (!data) return;
+  const data = scenes[id];
+  if (!data) return;
 
-    // Заполняем текст (с проверкой на существование ID)
-    if ($('scene-title')) $('scene-title').innerText = data.title;
-    if ($('scene-text')) $('scene-text').innerText = data.text;
-    
-    // Очищаем медиа и кнопки
-    const media = $('clue-media');
-    if (media) media.innerHTML = data.media || '';
+  // Анимация затухания
+  const gameArea = document.querySelector('.game');
+  gameArea.style.opacity = '0';
 
-    const choicesCont = $$('.choices');
-    if (choicesCont) {
-        choicesCont.innerHTML = '';
-        data.choices.forEach(ch => {
-            const b = document.createElement('button');
-            b.className = 'choice-btn';
-            b.innerText = ch.text;
-            b.onclick = () => {
-                playSnd('stepSound');
-                renderScene(ch.next);
-            };
-            choicesCont.appendChild(b);
-        });
+  setTimeout(() => {
+    // 1. Текст и заголовки
+    document.getElementById('scene-title').innerText = data.title;
+    document.getElementById('scene-text').innerHTML = data.text; // innerHTML для vocab-word
+
+    // 2. Mini English блок
+    const englishCont = document.getElementById('mini-english-content');
+    if (englishCont) {
+      englishCont.innerHTML = data.english || 'No new words in this scene.';
     }
-    
-    console.log("Scene rendered:", id);
+
+    // 3. Звук
+    if (data.sound) playSnd(data.sound);
+    playSnd('stepSound');
+
+    // 4. Кнопки
+    const choicesCont = document.querySelector('.choices');
+    choicesCont.innerHTML = '';
+    data.choices.forEach(ch => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerText = ch.text;
+      btn.onclick = () => {
+          playSnd('clickSound'); // Клик теперь работает на всех кнопках
+          renderScene(ch.next);
+      };
+      choicesCont.appendChild(btn);
+    });
+
+    // Появление
+    gameArea.style.opacity = '1';
+  }, 400);
 }
