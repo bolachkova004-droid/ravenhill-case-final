@@ -1,1 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@300;500;600&display=swap');
 
+/* RESET */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: 'Montserrat', sans-serif; 
+  background: #050609 url('assets/board2.webp') center/cover fixed; 
+  color: #f5f1e8; 
+}
+
+/* АНИМАЦИИ KEYFRAMES */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft { 
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInUp { 
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 10px #c9a46d; }
+  50% { text-shadow: 0 0 30px #c9a46d, 0 0 40px #c9a46d; }
+}
+@keyframes buttonBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* START SCREEN */
+.start-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 1s ease-out;
+}
+.start-video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  filter: grayscale(0.4) contrast(1.2);
+}
+.start-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.1), rgba(5,0,10,0.95));
+  z-index: 1;
+}
+.start-inner {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  animation: fadeIn 1.5s ease-out;
+}
+.start-title {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(2.8rem, 8vw, 4.8rem);
+  letter-spacing: 0.15em;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+.start-subtitle {
+  font-size: 1.8rem;
+  color: rgba(201,164,109,0.9);
+  margin-bottom: 1.5rem;
+  animation: fadeIn 2s ease-out 0.5s both;
+}
+.start-btn {
+  position: relative;
+  z-index: 4;
+  pointer-events: auto;
+  margin-top: 1.5rem;
+  padding: 1.2rem 3.5rem;
+  background: #1b1e29;
+  border: 2px solid rgba(201,164,109,0.6);
+  color: #f5f1e8;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeIn 2s ease-out 1s both;
+  transition: all 0.3s ease;
+}
+.start-btn:hover {
+  border-color: #c9a46d;
+  box-shadow: 0 0 30px rgba(201,164,109,0.7);
+  animation: buttonBounce 0.5s ease;
+}
+
+/* GAME */
+.game-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: fadeIn 0.8s ease-out;
+}
+.game {
+  animation: slideInLeft 0.8s ease-out;
+}
+.scene h2, #scene-title {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+#scene-text, #scene-extra {
+  animation: slideInLeft 0.6s ease-out;
+}
+.clue-media img, .clue-media video {
+  animation: slideInUp 0.6s ease-out;
+}
+.choice-btn {
+  animation: slideInUp 0.4s ease-out;
+  transition: all 0.2s ease;
+}
+.choice-btn:hover {
+  animation: buttonBounce 0.3s ease;
+  box-shadow: 0 8px 25px rgba(201,164,109,0.4);
+}
+#inventory-list li {
+  animation: popIn 0.5s ease-out;
+}
+.task-check {
+  animation: buttonBounce 0.3s ease-out;
+}
+.task-feedback {
+  animation: shake 0.5s ease-out;
+}
+.task-feedback.success {
+  animation: popIn 0.5s ease-out;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .start-inner { padding: 1.5rem; }
+  .choice-btn { padding: 16px; font-size: 1rem; }
+}
