@@ -85,6 +85,12 @@ body {
   transition: all 0.3s ease;
   pointer-events: auto; /* Гарантируем, что кнопка принимает клики */
 }
+.start-btn:hover {
+  background: var(--gold);
+  color: #000;
+  box-shadow: 0 0 25px rgba(201, 164, 109, 0.6);
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
 .start-title {
   font-family: 'Crimson Text', serif;
   font-size: clamp(2.5rem, 12vw, 6rem);
