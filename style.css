@@ -1,10 +1,11 @@
+/* 1. ШРИФТЫ И ОСНОВНЫЕ НАСТРОЙКИ */
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@300;500;600&display=swap');
 
 :root {
   --gold: #c9a46d;
   --bg-dark: #050609;
-  --panel-bg: rgba(0, 0, 0, 0.6);
-  --transition-speed: 0.4s;
+  --text-cream: #f5f1e8;
+  --panel-bg: rgba(15, 12, 8, 0.85);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,26 +13,12 @@
 body { 
   font-family: 'Montserrat', sans-serif; 
   background: var(--bg-dark) url('assets/board2.webp') center/cover fixed; 
-  color: #f5f1e8; 
+  color: var(--text-cream); 
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Контейнеры */
-.page, .game, .scene, .choices, .mini-english, .status {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-}
-
-/* ПЛАВНОСТЬ ПЕРЕХОДА СЦЕН (Важно для JS) */
-.game {
-  opacity: 1;
-  transition: opacity var(--transition-speed) ease-in-out;
-}
-
-/* START SCREEN */
+/* 2. ГЛАВНЫЙ ЭКРАН (START SCREEN) */
 .start-screen {
   position: fixed;
   inset: 0;
@@ -41,78 +28,34 @@ body {
   z-index: 9999;
   transition: opacity 0.8s ease;
 }
-.start-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.7;
-  filter: grayscale(0.4) contrast(1.2);
-}
+
 .start-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5,0,10,0.7);
+  background: rgba(0,0,0,0.8);
   z-index: 1;
 }
+
 .start-inner {
   position: relative;
   z-index: 3;
   text-align: center;
 }
+
 .start-title {
   font-family: 'Crimson Text', serif;
   font-size: clamp(3rem, 10vw, 6rem);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.3em;
   color: var(--gold);
-}
-.start-subtitle {
-  font-size: 2rem;
-  color: var(--gold);
-  margin: 1rem 0;
-}
-
-/* КНОПКИ */
-.start-btn, .choice-btn {
-  font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid var(--gold);
-  color: #f5f1e8;
-  background: #1b1e29;
 }
 
-.start-btn {
-  padding: 1.2rem 3.5rem;
-  font-size: 1.2rem;
-  border-radius: 12px;
-  margin: 2rem 0;
-}
-
-.choice-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-}
-
-.start-btn:hover, .choice-btn:hover {
-  background: var(--gold);
-  color: #1b1e29;
-  box-shadow: 0 0 15px rgba(201, 164, 109, 0.4);
-}
-
-/* GAME CONTENT */
-/* Упрощенная логика видимости */
+/* 3. ИГРОВОЙ КОНТЕНТ (СКРЫТ ПО УМОЛЧАНИЮ) */
 .game-content {
-  visibility: hidden; /* Вместо display: none */
+  visibility: hidden;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
-  position: absolute;
-  top: 0;
-  width: 100%;
+  padding: 40px 20px;
 }
 
 .game-content.visible {
@@ -120,57 +63,109 @@ body {
   opacity: 1;
 }
 
-/* Фикс для игрового поля, чтобы оно не было прозрачным по ошибке */
-.game {
-  opacity: 1 !important; 
-}
-
-
-.header h1, .scene h2 {
-  font-family: 'Crimson Text', serif;
-  color: var(--gold);
-  margin-bottom: 1rem;
-}
-
-.header h1 { font-size: 3rem; }
-.scene h2 { font-size: 2.5rem; }
-
-#scene-text, #scene-extra {
+/* 4. СЦЕНА (ОФОРМЛЕНИЕ ТЕКСТА И РАМОК) */
+.scene {
   max-width: 800px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 30px;
+  background: var(--panel-bg);
+  border: 1px solid var(--gold);
+  padding: 40px;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  position: relative;
+  transition: opacity 0.4s ease; /* Для плавной смены сцен */
+}
+
+/* Декоративная тонкая рамка внутри сцены */
+.scene::after {
+  content: "";
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border: 1px solid rgba(201, 164, 109, 0.2);
+  pointer-events: none;
+}
+
+.case-file {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+#scene-title {
+  font-family: 'Crimson Text', serif;
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+#scene-text {
+  font-size: 1.15rem;
   line-height: 1.8;
   text-align: left;
-  font-size: 1.1rem;
+  margin-bottom: 20px;
 }
 
+/* 5. КНОПКИ ВЫБОРА (CHOICES) */
 .choices {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 600px;
-  margin: 2rem auto;
+  gap: 15px;
+  max-width: 500px;
+  margin: 0 auto 40px;
 }
 
-/* МЕДИА И ПАНЕЛИ */
-.clue-media img, .clue-media video {
-  max-width: 100%;
-  border-radius: 12px;
-  border: 1px solid rgba(201, 164, 109, 0.3);
-  margin-top: 1rem;
+.choice-btn {
+  padding: 16px 25px;
+  background: #12141c;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+.choice-btn:hover {
+  background: var(--gold);
+  color: #000;
+  box-shadow: 0 0 15px rgba(201, 164, 109, 0.5);
+  transform: translateY(-2px);
+}
+
+/* 6. БЛОКИ АНГЛИЙСКОГО И СТАТУСА */
 .mini-english, .status {
-  background: var(--panel-bg);
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin: 1.5rem auto;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 800px;
+  margin: 20px auto;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(201, 164, 109, 0.3);
+  padding: 20px;
+  border-radius: 8px;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .page { padding: 15px; }
-  .start-title { font-size: 3.5rem; }
-  .start-subtitle { font-size: 1.5rem; }
-  #scene-text { text-align: center; }
+.mini-english h3, .status h3 {
+  color: var(--gold);
+  font-size: 1rem;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* 7. ИНТЕРАКТИВНЫЕ СЛОВА (VOCABULARY) */
+.vocab-word {
+  color: var(--gold);
+  font-weight: 600;
+  border-bottom: 1px dashed var(--gold);
+  cursor: help;
+  position: relative;
+}
+
+/* 8. МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 600px) {
+  .scene { padding: 20px; }
+  #scene-title { font-size: 1.8rem; }
+  .start-title { font-size: 2.5rem; letter-spacing: 0.1em; }
 }
