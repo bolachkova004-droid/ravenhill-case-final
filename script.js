@@ -1,83 +1,56 @@
-// Ждем, пока вся страница (и кнопка) загрузится
-window.onload = () => {
-    console.log("Игра готова к запуску!");
-
-    const startBtn = document.getElementById('start-btn');
-    
-    if (startBtn) {
-        startBtn.onclick = () => {
-            console.log("Кнопка нажата!");
-            
-            // 1. Пытаемся воспроизвести звук (если не сработает - не страшно)
-            const clickSnd = document.getElementById('clickSound');
-            if (clickSnd) {
-                clickSnd.play().catch(e => console.log("Звук заблокирован или не найден"));
-            }
-
-            // 2. Анимация исчезновения стартового экрана
-            const startScreen = document.getElementById('start-screen');
-            if (startScreen) {
-                startScreen.style.opacity = '0';
-                startScreen.style.pointerEvents = 'none'; // Чтобы больше нельзя было нажать
-            }
-
-            // 3. Через 0.8 секунд полностью убираем заставку и включаем игру
-            setTimeout(() => {
-                if (startScreen) startScreen.style.display = 'none';
-                
-                const gameContent = document.getElementById('game-content');
-                if (gameContent) {
-                    gameContent.style.display = 'block';
-                    // Плавное появление игры
-                    setTimeout(() => {
-                        gameContent.style.opacity = '1';
-                        // Запускаем фоновую музыку
-                        const bgMusic = document.getElementById('bgMusic');
-                        if (bgMusic) bgMusic.play().catch(e => {});
-                        // Рендерим первую сцену
-                        renderScene('scene1');
-                    }, 50);
-                }
-            }, 800);
-        };
-    } else {
-        console.error("Кнопка start-btn не найдена в HTML!");
-    }
-};
-
-// Функция отрисовки сцен (оставьте её как была)
+// Функция отрисовки сцены
 function renderScene(id) {
     const scenes = {
         scene1: {
-            title: 'Episode I · The Summons',
-            text: 'You stand before the gates of Ravenhill Estate. A cold wind rustles the dead leaves.',
-            choices: [
-                { text: 'Enter the Grand Hall', next: 'scene2_hall' }
-            ]
+            title: 'Welcome to Ravenhill',
+            text: 'You stand before the gates. It is quiet.',
+            choices: [{ text: 'Go inside', next: 'scene2' }]
         },
-        scene2_hall: {
-            title: 'The Grand Hall',
-            text: 'The heavy door creaks open. You are inside.',
-            choices: []
+        scene2: {
+            title: 'The Hall',
+            text: 'It is dark here.',
+            choices: [{ text: 'Go back', next: 'scene1' }]
         }
     };
+    const data = scenes[id];
+    if (!data) return;
 
-    const scene = scenes[id];
-    if (!scene) return;
-
-    document.getElementById('scene-title').innerText = scene.title;
-    document.getElementById('scene-text').innerHTML = scene.text;
+    document.getElementById('scene-title').innerText = data.title;
+    document.getElementById('scene-text').innerText = data.text;
     
     const container = document.querySelector('.choices');
-    if (container) {
-        container.innerHTML = '';
-        scene.choices.forEach(ch => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerText = ch.text;
-            btn.onclick = () => renderScene(ch.next);
-            container.appendChild(btn);
-        });
-    }
+    container.innerHTML = '';
+    data.choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = ch.text;
+        btn.onclick = () => renderScene(ch.next);
+        container.appendChild(btn);
+    });
 }
 
+// ГЛАВНЫЙ ОБРАБОТЧИК КЛИКА
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('start-btn');
+    
+    if (btn) {
+        btn.addEventListener('click', () => {
+            console.log("Клик сработал!");
+            
+            // Скрываем заставку
+            document.getElementById('start-screen').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                const game = document.getElementById('game-content');
+                game.style.display = 'block';
+                setTimeout(() => {
+                    game.style.opacity = '1';
+                    renderScene('scene1');
+                }, 50);
+            }, 800);
+        });
+    } else {
+        alert("Ошибка: Кнопка не найдена. Проверьте index.html!");
+    }
+});
