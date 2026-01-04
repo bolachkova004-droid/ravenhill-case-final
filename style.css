@@ -1,138 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@300;500;600&display=swap');
 
-:root {
-  --gold: #c9a46d;
-  --bg-dark: #050609;
-  --panel-bg: rgba(15, 12, 8, 0.9);
-}
+:root { --gold: #c9a46d; --bg-dark: #050609; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { 
-  font-family: 'Montserrat', sans-serif; 
-  background: var(--bg-dark); 
-  color: #f5f1e8; 
-  overflow-x: hidden;
-}
+body { font-family: 'Montserrat', sans-serif; background: black; color: white; overflow-x: hidden; }
 
-/* СТАРТОВЫЙ ЭКРАН - ИСПРАВЛЕН */
 .start-screen {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  background: black;
-  transition: opacity 0.8s ease;
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  z-index: 9999; background: black; transition: opacity 0.8s;
 }
 
-.start-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-  z-index: 1;
-}
+.start-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 1; }
+.start-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 2; pointer-events: none; }
 
-.start-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, transparent 20%, black 100%);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.start-inner {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.start-title {
-  font-family: 'Crimson Text', serif;
-  font-size: clamp(3rem, 10vw, 6rem);
-  color: var(--gold);
-  letter-spacing: 0.3em;
-  margin-bottom: 10px;
-}
+.start-inner { position: relative; z-index: 10; text-align: center; }
 
 .start-btn {
-  display: block;
-  margin: 40px 0;
-  padding: 20px 60px;
-  background: #1b1e29;
-  border: 2px solid var(--gold);
-  color: var(--gold);
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s;
-  pointer-events: auto;
+  display: block; margin: 30px auto; padding: 20px 50px;
+  background: #1b1e29; border: 2px solid var(--gold); color: var(--gold);
+  font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
 }
 
-.start-btn:hover {
-  background: var(--gold);
-  color: black;
-  box-shadow: 0 0 20px var(--gold);
-}
+.start-btn:hover { background: var(--gold); color: black; box-shadow: 0 0 20px var(--gold); }
 
-/* ИГРА */
-.game-content {
-  display: none;
-  opacity: 0;
-  transition: opacity 1s;
-  padding: 20px;
-  background: url('assets/board2.webp') center/cover fixed;
-  min-height: 100vh;
-}
-
-.scene {
-  max-width: 800px;
-  margin: 40px auto;
-  background: var(--panel-bg);
-  padding: 40px;
-  border: 1px solid var(--gold);
-  text-align: left;
-  position: relative;
-}
-
-#scene-title { font-family: 'Crimson Text', serif; color: var(--gold); margin-bottom: 20px; font-size: 2rem; }
-#scene-text { line-height: 1.8; font-size: 1.1rem; }
-
-.choices {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 500px;
-  margin: 30px auto;
-}
-
-.choice-btn {
-  padding: 15px;
-  background: #12141c;
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: 0.3s;
-}
-
-.choice-btn:hover { background: var(--gold); color: black; }
-
-.mini-english, .status {
-  max-width: 800px;
-  margin: 20px auto;
-  background: rgba(0,0,0,0.7);
-  padding: 20px;
-  border: 1px solid rgba(201,164,109,0.3);
-}
-
-.vocab-word { color: var(--gold); font-weight: bold; border-bottom: 1px dashed; }
+.game-content { display: none; opacity: 0; transition: 1s; padding: 20px; }
+.scene { max-width: 800px; margin: auto; background: rgba(20,20,20,0.9); padding: 30px; border: 1px solid var(--gold); }
+.choices { display: flex; flex-direction: column; gap: 10px; max-width: 500px; margin: 20px auto; }
+.choice-btn { padding: 15px; background: #111; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; }
