@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ravenhill Case</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Стартовый экран -->
+  <div id="start-screen" class="start-screen">
+    <img src="assets/board2.webp" class="start-bg" alt="Ravenhill Estate">
+    <div class="start-overlay"></div>
+    <div class="start-inner">
+      <h1 class="start-title">RAVENHILL</h1>
+      <p class="start-subtitle">The Case</p>
+      <button id="start-btn" class="start-btn">ENTER THE ESTATE</button>
+      <p class="start-hint">Episode I · The Summons</p>
+    </div>
+  </div>
 
+  <!-- Игра -->
+  <div id="game-content" class="game-content">
+    <div class="page">
+      <header class="header">
+        <h1>The Ravenhill Case</h1>
+        <p class="subtitle">Interactive mystery game for English learners (B1–B2)</p>
+        <video class="intro-video" autoplay muted loop playsinline>
+          <source src="assets/hall-intro.mp4" type="video/mp4">
+        </video>
+      </header>
+
+      <main class="game">
+        <section class="scene">
+          <p class="case-file">Case File · Ravenhill Estate</p>
+          <h2 id="scene-title"></h2>
+          <div id="scene-text"></div>
+          <div id="scene-extra"></div>
+          <div id="clue-media" class="clue-media"></div>
+        </section>
+
+        <section class="inventory">
+          <h3>Evidence / Улики</h3>
+          <ul id="inventory-list"></ul>
+        </section>
+
+        <section class="choices">
+          <button id="choiceA" class="choice-btn"></button>
+          <button id="choiceB" class="choice-btn"></button>
+          <button id="choiceC" class="choice-btn"></button>
+        </section>
+
+        <button id="backButton" class="back-btn" style="display:none;">
+          ← Back to the hall
+        </button>
+
+        <section class="mini-english">
+          <h3>Mini English / Мини-английский</h3>
+          <div id="mini-english-content"></div>
+        </section>
+
+        <section class="status">
+          <h3>Case Status / Статус дела</h3>
+          <p id="score-display">Score: 0 points</p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Звуки -->
+  <audio id="bgMusic" preload="auto" loop src="assets/mystery-loop.mp3"></audio>
+  <audio id="clickSound" preload="auto" src="assets/click1.wav"></audio>
+  <audio id="stepSound" preload="auto" src="assets/footsteps.mp3"></audio>
+  <audio id="diary-voice" preload="auto" src="assets/diary-voice.mp3"></audio>
+  <audio id="sir-henry-voice" preload="auto" src="assets/sir-henry-voice.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
