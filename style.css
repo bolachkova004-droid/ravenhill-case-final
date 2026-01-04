@@ -105,11 +105,26 @@ body {
 }
 
 /* GAME CONTENT */
+/* Упрощенная логика видимости */
 .game-content {
-  display: none;
+  visibility: hidden; /* Вместо display: none */
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
+
+.game-content.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Фикс для игрового поля, чтобы оно не было прозрачным по ошибке */
+.game {
+  opacity: 1 !important; 
+}
+
 
 .header h1, .scene h2 {
   font-family: 'Crimson Text', serif;
