@@ -6,39 +6,15 @@ body {
   font-family: 'Montserrat', sans-serif; 
   background: #050609 url('assets/board2.webp') center/cover fixed; 
   color: #f5f1e8; 
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* АНИМАЦИИ KEYFRAMES */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideInLeft { 
-  from { opacity: 0; transform: translateX(-50px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInUp { 
-  from { opacity: 0; transform: translateY(50px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes glowPulse {
-  0%, 100% { text-shadow: 0 0 10px #c9a46d; }
-  50% { text-shadow: 0 0 30px #c9a46d, 0 0 40px #c9a46d; }
-}
-@keyframes buttonBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-@keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  70% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); }
-}
+/* АНИМАЦИИ */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes glow { 0%, 100% { text-shadow: 0 0 10px #c9a46d; } 50% { text-shadow: 0 0 30px #c9a46d; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
 /* START SCREEN */
 .start-screen {
@@ -48,9 +24,9 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  animation: fadeIn 1s ease-out;
+  background: #000;
 }
-.start-video-bg {
+.start-bg {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -62,7 +38,7 @@ body {
 .start-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(0,0,0,0.1), rgba(5,0,10,0.95));
+  background: rgba(5,0,10,0.7);
   z-index: 1;
 }
 .start-inner {
@@ -73,82 +49,153 @@ body {
 }
 .start-title {
   font-family: 'Crimson Text', serif;
-  font-size: clamp(2.8rem, 8vw, 4.8rem);
-  letter-spacing: 0.15em;
-  animation: glowPulse 3s ease-in-out infinite;
+  font-size: clamp(3rem, 10vw, 6rem);
+  letter-spacing: 0.2em;
+  animation: glow 3s infinite alternate;
 }
 .start-subtitle {
-  font-size: 1.8rem;
-  color: rgba(201,164,109,0.9);
-  margin-bottom: 1.5rem;
-  animation: fadeIn 2s ease-out 0.5s both;
+  font-size: 2rem;
+  color: #c9a46d;
+  margin: 1rem 0;
 }
 .start-btn {
   position: relative;
   z-index: 4;
   pointer-events: auto;
-  margin-top: 1.5rem;
+  margin: 2rem 0;
   padding: 1.2rem 3.5rem;
   background: #1b1e29;
-  border: 2px solid rgba(201,164,109,0.6);
+  border: 2px solid #c9a46d;
   color: #f5f1e8;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 12px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  animation: fadeIn 2s ease-out 1s both;
   transition: all 0.3s ease;
 }
 .start-btn:hover {
-  border-color: #c9a46d;
-  box-shadow: 0 0 30px rgba(201,164,109,0.7);
-  animation: buttonBounce 0.5s ease;
+  background: #c9a46d;
+  color: #1b1e29;
+  box-shadow: 0 0 30px #c9a46d;
+  animation: bounce 0.5s ease;
 }
 
 /* GAME */
 .game-content {
   display: none;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  animation: fadeIn 0.8s ease-out;
+  transition: opacity 0.8s ease-in-out;
 }
-.game {
-  animation: slideInLeft 0.8s ease-out;
+.game-content.visible {
+  display: block;
+  opacity: 1;
 }
-.scene h2, #scene-title {
-  animation: glowPulse 2s ease-in-out infinite;
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
 }
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.header h1 {
+  font-family: 'Crimson Text', serif;
+  font-size: 3rem;
+  color: #c9a46d;
+  animation: glow 3s infinite alternate;
+}
+
+.scene, .choices, .mini-english {
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  animation: slideIn 0.8s ease-out;
+}
+
+#scene-title {
+  font-family: 'Crimson Text', serif;
+  color: #c9a46d;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
 #scene-text, #scene-extra {
-  animation: slideInLeft 0.6s ease-out;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 1rem;
 }
+
 .clue-media img, .clue-media video {
-  animation: slideInUp 0.6s ease-out;
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 1rem 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
 }
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
 .choice-btn {
-  animation: slideInUp 0.4s ease-out;
-  transition: all 0.2s ease;
+  width: 100%;
+  padding: 14px 20px;
+  background: #1b1e29;
+  border: 2px solid #c9a46d;
+  color: #f5f1e8;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s;
 }
+
 .choice-btn:hover {
-  animation: buttonBounce 0.3s ease;
-  box-shadow: 0 8px 25px rgba(201,164,109,0.4);
+  background: #c9a46d;
+  color: #1b1e29;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(201,164,109,0.4);
 }
-#inventory-list li {
-  animation: popIn 0.5s ease-out;
+
+.back-btn {
+  display: block;
+  margin: 2rem auto;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px dashed #c9a46d;
+  color: #c9a46d;
+  border-radius: 30px;
+  cursor: pointer;
 }
-.task-check {
-  animation: buttonBounce 0.3s ease-out;
+
+.mini-english {
+  background: rgba(0,0,0,0.5);
+  padding: 1.5rem;
+  border-radius: 12px;
 }
-.task-feedback {
-  animation: shake 0.5s ease-out;
+
+#mini-english-content {
+  line-height: 1.6;
 }
-.task-feedback.success {
-  animation: popIn 0.5s ease-out;
+
+.status {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 2rem;
 }
 
 /* MOBILE */
-@media (max-width: 480px) {
-  .start-inner { padding: 1.5rem; }
-  .choice-btn { padding: 16px; font-size: 1rem; }
+@media (max-width: 768px) {
+  .start-title { font-size: 3rem; }
+  .start-subtitle { font-size: 1.5rem; }
+  .start-btn { padding: 1rem 2rem; font-size: 1rem; }
+  .scene, .mini-english { padding: 1rem; }
 }
