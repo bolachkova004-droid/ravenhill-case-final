@@ -1,11 +1,11 @@
 // Регулировка громкости звуков
 document.addEventListener('DOMContentLoaded', () => {
   const sounds = {
-    bgMusic: 0.25,        // фон очень тихо
-    clickSound: 0.9,      // клики громко
-    stepSound: 0.85,      // шаги слышно
-    diaryVoice: 0.7,
-    sirHenryVoice: 0.7
+    'bgMusic': 0.25,        // ID в HTML: bgMusic
+    'clickSound': 0.9,      // ID в HTML: clickSound
+    'stepSound': 0.85,      // ID в HTML: stepSound
+    'diary-voice': 0.7,     // ИСПРАВЛЕНО: было diaryVoice (не совпадало с ID в HTML)
+    'sir-henry-voice': 0.7  // ИСПРАВЛЕНО: было sirHenryVoice
   };
 
   Object.keys(sounds).forEach(id => {
@@ -19,36 +19,38 @@ function playSound(id) {
   const audio = document.getElementById(id);
   if (audio) {
     audio.currentTime = 0;
-    audio.play().catch(e => console.log('Audio error:', e));
+    audio.play().catch(e => console.warn('Audio playback blocked:', e));
   }
 }
 
 // Запуск игры
 document.getElementById('start-btn').onclick = () => {
   const start = document.getElementById('start-screen');
+  const game = document.getElementById('game-content');
+  
   start.style.opacity = '0';
   playSound('clickSound');
 
   setTimeout(() => {
     start.style.display = 'none';
-    const game = document.getElementById('game-content');
     game.style.display = 'block';
+    
+    // Небольшая задержка для запуска анимации появления
     setTimeout(() => {
       game.classList.add('visible');
       playSound('bgMusic');
-      renderScene('scene1'); // старт с первой сцены
-      console.log('Game started, rendering scene1');
+      renderScene('scene1');
     }, 50);
   }, 800);
 };
 
-// Сцены — полный пример с текстом, картинками, звуками
+// Сцены
 const scenes = {
   scene1: {
     title: 'Prologue · Arrival at Ravenhill',
     text: 'You are part of a small detective team. Tonight, you arrive at the old Ravenhill Estate. Only one window is still lit. Inside the hall lies a dusty table and an old diary bearing the name Elizabeth Ravenhill.',
     extra: 'The house feels alive, watching your every move.',
-    media: '', // без картинки в первой сцене
+    media: '', 
     choices: [
       { text: 'Read the diary', next: 'scene2_diary' },
       { text: 'Explore the hall', next: 'scene2_hall' }
@@ -59,7 +61,7 @@ const scenes = {
     title: 'Elizabeth\'s Diary',
     text: 'The handwriting changes abruptly, as if written in fear. "The house feels different tonight. Soft footsteps echo in the halls. Someone is watching me."',
     extra: 'Pages are yellowed, with ink smudges from hasty writing.',
-    media: '<img src="assets/diary-mystical.png" alt="Elizabeth\'s Diary" style="max-width:100%; border-radius:12px;">',
+    media: '', // ИСПРАВЛЕНО: удален текст <img...>, так как он добавляется ниже через JS
     sound: 'diary-voice',
     choices: [
       { text: 'Continue reading', next: 'scene3' },
@@ -86,52 +88,46 @@ const scenes = {
 
 // Основная функция рендера сцены
 function renderScene(id) {
-  console.log('Rendering scene:', id); // для отладки
-
   const scene = scenes[id];
-  if (!scene) {
-    console.log('Scene not found:', id);
-    return;
-  }
+  if (!scene) return;
 
   playSound('stepSound');
+  if (scene.sound) playSound(scene.sound);
 
-  // Плавный fade-out
-  document.querySelector('.game').style.opacity = '0';
+  const gameArea = document.querySelector('.game');
+  gameArea.style.opacity = '0'; // Плавное исчезновение
 
   setTimeout(() => {
-    // Обновляем текст
     document.getElementById('scene-title').innerText = scene.title;
     document.getElementById('scene-text').innerText = scene.text;
     document.getElementById('scene-extra').innerText = scene.extra || '';
 
-    // Медиа (очищаем и добавляем)
+    // Медиа
     const mediaEl = document.getElementById('clue-media');
     mediaEl.innerHTML = scene.media || '';
 
-    // Автоматическое добавление картинки дневника ТОЛЬКО в сценах с дневником
-    if (id === 'scene2_diary' || id.includes('diary')) {
+    // Логика добавления картинки дневника
+    if (id.includes('diary')) {
       const diaryImg = document.createElement('img');
       diaryImg.src = 'assets/diary-mystical.png';
       diaryImg.alt = 'Elizabeth\'s Diary';
-      diaryImg.style.maxWidth = '100%';
-      diaryImg.style.borderRadius = '12px';
-      diaryImg.style.marginTop = '16px';
+      diaryImg.className = 'clue-img'; // используйте классы вместо инлайн-стилей
       mediaEl.appendChild(diaryImg);
     }
 
     // Кнопки выбора
-    const choicesDiv = document.getElementById('choices');
-    choicesDiv.innerHTML = '';
+    // ИСПРАВЛЕНО: в HTML у вас <section class="choices">, а не id="choices"
+    const choicesContainer = document.querySelector('.choices');
+    choicesContainer.innerHTML = ''; 
+    
     (scene.choices || []).forEach(choice => {
       const btn = document.createElement('button');
       btn.className = 'choice-btn';
       btn.innerText = choice.text;
       btn.onclick = () => renderScene(choice.next);
-      choicesDiv.appendChild(btn);
+      choicesContainer.appendChild(btn);
     });
 
-    // Плавное появление
-    document.querySelector('.game').style.opacity = '1';
+    gameArea.style.opacity = '1'; // Плавное появление
   }, 400);
 }
