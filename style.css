@@ -1,30 +1,78 @@
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@300;500;600&display=swap');
 
-:root { --gold: #c9a46d; --bg-dark: #050609; }
+:root {
+  --gold: #c9a46d;
+  --bg-dark: #050609;
+  --panel-bg: rgba(15, 12, 8, 0.92);
+}
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { font-family: 'Montserrat', sans-serif; background: black; color: white; overflow-x: hidden; }
+body { 
+  font-family: 'Montserrat', sans-serif; 
+  background: var(--bg-dark); 
+  color: #f5f1e8; 
+  overflow-x: hidden;
+}
 
+/* СТАРТОВЫЙ ЭКРАН */
 .start-screen {
-  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-  z-index: 9999; background: black; transition: opacity 0.8s;
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; background: black; transition: opacity 0.8s ease;
 }
 
 .start-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 1; }
-.start-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 2; pointer-events: none; }
+.start-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent, black); z-index: 2; pointer-events: none; }
 
 .start-inner { position: relative; z-index: 10; text-align: center; }
+.start-title { font-family: 'Crimson Text', serif; font-size: clamp(3rem, 10vw, 6rem); color: var(--gold); letter-spacing: 0.3em; margin-bottom: 10px; }
 
 .start-btn {
-  display: block; margin: 30px auto; padding: 20px 50px;
+  display: block; margin: 40px auto; padding: 20px 60px;
   background: #1b1e29; border: 2px solid var(--gold); color: var(--gold);
-  font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+  font-weight: bold; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+}
+.start-btn:hover { background: var(--gold); color: black; box-shadow: 0 0 25px var(--gold); }
+
+/* ИГРОВОЕ ПОЛЕ */
+.game-content {
+  display: none; opacity: 0; transition: opacity 1s;
+  background: url('assets/board2.webp') center/cover fixed;
+  min-height: 100vh; padding: 40px 20px;
 }
 
-.start-btn:hover { background: var(--gold); color: black; box-shadow: 0 0 20px var(--gold); }
+.scene {
+  max-width: 850px; margin: 0 auto 30px;
+  background: var(--panel-bg); padding: 40px;
+  border: 1px solid var(--gold); position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
 
-.game-content { display: none; opacity: 0; transition: 1s; padding: 20px; }
-.scene { max-width: 800px; margin: auto; background: rgba(20,20,20,0.9); padding: 30px; border: 1px solid var(--gold); }
-.choices { display: flex; flex-direction: column; gap: 10px; max-width: 500px; margin: 20px auto; }
-.choice-btn { padding: 15px; background: #111; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; }
+/* Декоративные уголки */
+.scene::before {
+  content: ""; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border: 1px solid rgba(201, 164, 109, 0.2); pointer-events: none;
+}
+
+#scene-title { font-family: 'Crimson Text', serif; color: var(--gold); font-size: 2.5rem; margin-bottom: 20px; text-align: center; }
+#scene-text { line-height: 1.8; font-size: 1.15rem; margin-bottom: 20px; }
+
+.choices { display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 30px auto; }
+
+.choice-btn {
+  padding: 18px; background: #12141c; border: 1px solid var(--gold);
+  color: var(--gold); font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s;
+}
+.choice-btn:hover { background: var(--gold); color: black; transform: translateY(-2px); }
+
+/* ПАНЕЛИ СТАТУСА И АНГЛИЙСКОГО */
+.panels-container { max-width: 850px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.mini-english, .status { background: rgba(0,0,0,0.7); padding: 20px; border: 1px solid rgba(201, 164, 109, 0.3); border-radius: 4px; }
+.mini-english h3, .status h3 { color: var(--gold); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; }
+
+/* ИНТЕРАКТИВНЫЕ СЛОВА */
+.vocab-word { color: var(--gold); font-weight: 600; border-bottom: 1px dashed var(--gold); cursor: help; }
+
+@media (max-width: 768px) { .panels-container { grid-template-columns: 1fr; } }
