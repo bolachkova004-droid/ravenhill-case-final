@@ -20,18 +20,19 @@ function playSound(id) {
 
 // Старт игры — плавный переход без мигания
 document.getElementById('start-btn').onclick = () => {
-  const startScreen = document.getElementById('start-screen');
-  startScreen.style.opacity = '0';
+  const start = document.getElementById('start-screen');
+  start.style.opacity = '0';
   playSound('clickSound');
 
   setTimeout(() => {
-    startScreen.style.display = 'none';
-    const gameContent = document.getElementById('game-content');
-    gameContent.style.display = 'block';
+    start.style.display = 'none';
+    const game = document.getElementById('game-content');
+    game.style.display = 'block';
     setTimeout(() => {
-      gameContent.classList.add('visible');
-      playSound('bgMusic'); // запускаем фоновую музыку
-      renderScene('scene1'); // первая сцена
+      game.classList.add('visible');
+      playSound('bgMusic');
+      renderScene('scene1'); // ← ОБЯЗАТЕЛЬНО вызываем первую сцену!
+      console.log('Game started, rendering scene1'); // для отладки
     }, 50);
   }, 800);
 };
