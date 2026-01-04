@@ -5,14 +5,15 @@ function play(id) {
 }
 
 // Старт
-document.getElementById('start-btn').onclick = () => {
+document.getElementById('start-screen').style.opacity = '0';
+setTimeout(() => {
   document.getElementById('start-screen').style.display = 'none';
   const game = document.getElementById('game-content');
   game.style.display = 'block';
-  game.classList.add('visible');
+  setTimeout(() => game.classList.add('visible'), 50); // плавное появление
   play('bgMusic');
-  loadScene('scene1');
-};
+  renderScene('scene1'); // или loadScene, как у тебя
+}, 800);
 
 // Сцены (пример, добавляй свои)
 const scenes = {
