@@ -3,58 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Ravenhill Case | Interactive Mystery</title>
+  <title>The Ravenhill Case</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Стартовый экран -->
+  <!-- СТАРТОВЫЙ ЭКРАН -->
   <div id="start-screen" class="start-screen">
-    <img src="assets/board2.webp" class="start-bg" alt="Foggy entrance to the Ravenhill Estate">
+    <img src="assets/board2.webp" class="start-bg" alt="Ravenhill Estate">
     <div class="start-overlay"></div>
     <div class="start-inner">
       <h1 class="start-title">RAVENHILL</h1>
       <p class="start-subtitle">The Case</p>
-      <button id="start-btn" type="button" class="start-btn">ENTER THE ESTATE</button>
+      <button id="start-btn" class="start-btn" type="button">ENTER THE ESTATE</button>
       <p class="start-hint">Episode I · The Summons</p>
     </div>
   </div>
 
-  <!-- Основной игровой контент -->
-  <div id="game-content" class="game-content" aria-hidden="true">
+  <!-- ИГРОВОЙ КОНТЕНТ -->
+  <div id="game-content" class="game-content">
     <div class="page">
       <header class="header">
         <h1>The Ravenhill Case</h1>
-        <p class="subtitle">Interactive mystery game for English learners (B1–B2)</p>
-        <video class="intro-video" autoplay muted loop playsinline poster="assets/hall-placeholder.jpg">
-          <source src="assets/hall-intro.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
       </header>
 
       <main class="game">
-        <section class="scene" aria-labelledby="scene-title">
+        <section class="scene">
           <p class="case-file">Case File · Ravenhill Estate</p>
           <h2 id="scene-title"></h2>
-          <!-- aria-live заставляет скринридеры зачитывать изменения в тексте -->
-          <div id="scene-text" aria-live="polite"></div>
-          <div id="scene-extra"></div>
+          <div id="scene-text"></div>
           <div id="clue-media" class="clue-media"></div>
         </section>
 
-        <section class="inventory">
-          <h3>Evidence / Улики</h3>
-          <ul id="inventory-list"></ul>
-        </section>
-
-        <section class="choices">
-          <button id="choiceA" type="button" class="choice-btn"></button>
-          <button id="choiceB" type="button" class="choice-btn"></button>
-          <button id="choiceC" type="button" class="choice-btn"></button>
-        </section>
-
-        <button id="backButton" class="back-btn" style="display:none;" type="button">
-          ← Back to the hall
-        </button>
+        <section class="choices"></section>
 
         <section class="mini-english">
           <h3>Mini English / Мини-английский</h3>
@@ -63,34 +43,14 @@
 
         <section class="status">
           <h3>Case Status / Статус дела</h3>
-          <p id="score-display" aria-live="polite">Score: 0 points</p>
+          <p id="score-display">Score: 0 points</p>
         </section>
       </main>
     </div>
   </div>
 
-  <!-- Звуковые эффекты и озвучка -->
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="assets/mystery-loop.mp3" type="audio/mpeg">
-  </audio>
-  
-  <audio id="clickSound" preload="auto">
-    <source src="assets/click1.wav" type="audio/wav">
-  </audio>
-
-  <audio id="stepSound" preload="auto">
-    <source src="assets/footsteps.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Озвучка персонажей загружается только по требованию (metadata) -->
-  <audio id="diary-voice" preload="metadata">
-    <source src="assets/diary-voice.mp3" type="audio/mpeg">
-  </audio>
-
-  <audio id="sir-henry-voice" preload="metadata">
-    <source src="assets/sir-henry-voice.mp3" type="audio/mpeg">
-  </audio>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <!-- ЗВУКИ -->
+  <audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
+  <audio id="clickSound" src="assets/click1.wav"></audio>
+  <audio id="stepSound" src="assets/footsteps.mp3"></audio>
+  <audio id="diary-voice" src="assets/diary-voic
