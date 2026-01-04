@@ -1,11 +1,26 @@
 let score = 0;
 
+// Установка громкости (выкручиваем клики на максимум)
+document.addEventListener('DOMContentLoaded', () => {
+    const vol = {
+        'bgMusic': 0.2,    // Фоновая музыка тихо
+        'radioSound': 0.9, // Радио громко
+        'uiClick': 1.0,    // Кнопки МАКСИМАЛЬНО громко
+        'stepSound': 0.7,
+        'diary-voice': 0.9
+    };
+    Object.keys(vol).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.volume = vol[id];
+    });
+});
+
 const sounds = {
     play: (id) => {
         const el = document.getElementById(id);
         if (el) {
             el.currentTime = 0;
-            el.play().catch(e => console.log("Sound blocked:", id));
+            el.play().catch(() => {});
         }
     }
 };
@@ -13,56 +28,39 @@ const sounds = {
 const scenes = {
     scene1: {
         title: 'Episode I · The Summons',
-        text: 'You stand before the towering gates of Ravenhill. The air is <span class="vocab-word">chilly</span>. You hear a strange message on your radio.',
-        english: '<b>Chilly</b> — прохладно.',
-        media: '<img src="assets/gates.png" style="width:100%; border-radius:12px; margin-top:20px;">', 
-        onEnter: () => sounds.play('clickSound'), // Это ваше radio-message.wav
+        text: 'You stand before the gates of Ravenhill. Suddenly, your <span class="vocab-word">walkie-talkie</span> starts buzzing.',
+        english: '<b>Walkie-talkie</b> — рация.',
+        media: '<img src="assets/gates.png" style="width:100%; border-radius:12px; margin-top:20px;">',
         choices: [
-            { text: 'Enter the Grand Hall', next: 'scene2_hall', points: 5 },
-            { text: 'Search the Garden', next: 'scene2_garden', points: 10 }
+            { text: 'Answer the radio', next: 'scene_radio' },
+            { text: 'Ignore and enter the Hall', next: 'scene2_hall' }
+        ]
+    },
+    scene_radio: {
+        title: 'Radio Message',
+        text: 'The signal is weak. A voice says: "Detective, do not trust the portraits. They are <span class="vocab-word">watching</span>."',
+        english: '<b>Watching</b> — наблюдают.',
+        // Радио играет ТОЛЬКО ЗДЕСЬ и сопровождается видео помех
+        media: '<video src="assets/radio-scene.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px; margin-top:20px;"></video>',
+        onEnter: () => sounds.play('radioSound'), 
+        choices: [
+            { text: 'Enter the Grand Hall', next: 'scene2_hall' }
         ]
     },
     scene2_hall: {
         title: 'The Grand Hall',
-        text: 'The heavy door <span class="vocab-word">creaks</span> open. Inside, you see a dusty table with an old diary.',
-        english: '<b>Creak</b> — скрипеть.',
-        // Используем ваше видео hall-intro
+        text: 'The heavy door creaks open. You are in the main hall.',
         media: '<video src="assets/hall-intro.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px; margin-top:20px;"></video>',
         choices: [
-            { text: 'Read the Diary', next: 'scene_diary', points: 15 }
+            { text: 'Read the Diary', next: 'scene_diary' }
         ]
     },
     scene_diary: {
         title: 'Elizabeth\'s Diary',
-        text: 'The handwriting is shaky: "I must hide. Sir Henry is not who he says he is."',
-        english: '<b>Shaky</b> — дрожащий.',
+        text: 'The diary is open. You hear Elizabeth\'s voice in your head.',
         media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px; margin-top:20px;">',
-        // Включаем озвучку дневника
-        onEnter: () => {
-            const diaryVoice = document.getElementById('diary-voice');
-            if (diaryVoice) diaryVoice.play();
-        },
-        choices: [
-            { text: 'Look at Sir Henry\'s Portrait', next: 'scene_portrait', points: 20 }
-        ]
-    },
-    scene2_garden: {
-        title: 'The Silent Garden',
-        text: 'The roses are <span class="vocab-word">withered</span>. In the shadows, you notice a stone statue.',
-        english: '<b>Withered</b> — увядший.',
-        media: '<img src="assets/garden.png" style="width:100%; border-radius:12px; margin-top:20px;">',
-        choices: [
-            { text: 'Return to Hall', next: 'scene2_hall', points: 0 }
-        ]
-    },
-    scene_portrait: {
-        title: 'Sir Henry\'s Portrait',
-        text: 'Sir Henry Ravenhill looks stern. His eyes seem to follow you. You find a <span class="vocab-word">clue</span> behind the frame.',
-        english: '<b>Clue</b> — улика, зацепка.',
-        media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px; margin-top:20px;">',
-        choices: [
-            { text: 'Continue Investigation', next: 'scene1', points: 10 }
-        ]
+        onEnter: () => sounds.play('diary-voice'),
+        choices: [{ text: 'Go back to Hall', next: 'scene2_hall' }]
     }
 };
 
@@ -77,7 +75,6 @@ function renderScene(id) {
         document.getElementById('scene-title').innerText = data.title;
         document.getElementById('scene-text').innerHTML = data.text;
         document.getElementById('mini-english-content').innerHTML = data.english || '';
-        document.getElementById('score-display').innerText = `Score: ${score} points`;
 
         const mediaCont = document.getElementById('clue-media');
         if (mediaCont) mediaCont.innerHTML = data.media || '';
@@ -89,8 +86,7 @@ function renderScene(id) {
             btn.className = 'choice-btn';
             btn.innerText = ch.text;
             btn.onclick = () => {
-                score += (ch.points || 0);
-                sounds.play('stepSound'); 
+                sounds.play('uiClick'); // Громкий клик на каждую кнопку
                 renderScene(ch.next);
             };
             choicesCont.appendChild(btn);
@@ -101,22 +97,17 @@ function renderScene(id) {
     }, 400);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) {
-        startBtn.onclick = () => {
-            sounds.play('stepSound');
-            document.getElementById('start-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('start-screen').style.display = 'none';
-                const game = document.getElementById('game-content');
-                game.style.display = 'block';
-                setTimeout(() => {
-                    game.style.opacity = '1';
-                    sounds.play('bgMusic');
-                    renderScene('scene1');
-                }, 50);
-            }, 800);
-        };
-    }
-});
+// СТАРТ
+document.getElementById('start-btn').onclick = () => {
+    sounds.play('uiClick');
+    document.getElementById('start-screen').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-content').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('game-content').style.opacity = '1';
+            sounds.play('bgMusic');
+            renderScene('scene1');
+        }, 50);
+    }, 800);
+};
