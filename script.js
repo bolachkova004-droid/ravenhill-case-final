@@ -1,108 +1,88 @@
-// Функция для безопасного поиска элементов
-const $ = (id) => document.getElementById(id);
-const $$ = (sel) => document.querySelector(sel);
-
-// Настройка звуков
-document.addEventListener('DOMContentLoaded', () => {
-    const volumes = { 'bgMusic': 0.2, 'clickSound': 0.7, 'stepSound': 0.5 };
-    Object.keys(volumes).forEach(id => {
-        if ($(id)) $(id).volume = volumes[id];
-    });
-});
-
-function playSnd(id) {
-    if ($(id)) $(id).play().catch(() => {});
-}
-
-// Данные сцен
-const scenes = {
-    const scenes = {
-  scene1: {
-    title: 'Episode I · The Gates',
-    text: 'You stand before the towering iron gates of Ravenhill. A cold wind rustles the dead leaves. To your left, a <span class="vocab-word" title="заброшенный">neglected</span> garden; ahead, the manor itself.',
-    english: '<b>Neglected</b> — заброшенный, находящийся в запустении.',
-    choices: [
-      { text: 'Enter the Grand Hall', next: 'scene2_hall' },
-      { text: 'Investigate the Garden', next: 'scene2_garden' }
-    ]
-  },
-  scene2_hall: {
-    title: 'The Grand Hall',
-    text: 'The heavy oak door <span class="vocab-word" title="скрипеть">creaks</span> open. Dust motes dance in your flashlight beam. On a marble table lies a silver key and a leather-bound diary.',
-    english: '<b>Creak</b> — скрипеть (о двери, поле).',
-    choices: [
-      { text: 'Take the Silver Key', next: 'scene3_key' },
-      { text: 'Read the Diary', next: 'scene2_diary' }
-    ]
-  },
-  scene2_diary: {
-    title: 'Elizabeth\'s Confession',
-    text: 'The diary belongs to Elizabeth Ravenhill. The last entry says: "He is not who he claims to be. The shadows are moving."',
-    english: '<b>Entry</b> — запись (в дневнике или журнале).',
-    sound: 'diary-voice',
-    choices: [
-      { text: 'Look for Elizabeth', next: 'scene3_stairs' },
-      { text: 'Go back to Hall', next: 'scene2_hall' }
-    ]
-  },
-  scene2_garden: {
-    title: 'The Silent Garden',
-    text: 'Among the withered roses, you find a stone statue of a weeping woman. Her eyes seem to follow you. You notice a hidden cellar door.',
-    english: '<b>Withered</b> — увядший, высохший.',
-    choices: [
-      { text: 'Open the cellar door', next: 'scene3_cellar' },
-      { text: 'Return to gates', next: 'scene1' }
-    ]
-  },
-  scene3_key: {
-    title: 'The Silver Key',
-    text: 'You pocket the key. Suddenly, the front door slams shut. You are trapped inside. A faint piano music starts playing upstairs.',
-    english: '<b>Slam shut</b> — захлопнуться с силой.',
-    choices: [
-      { text: 'Follow the music', next: 'scene3_stairs' }
-    ]
-  }
+// Настройки звука
+const playSnd = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.play().catch(() => {});
 };
 
-// ОБНОВЛЕННАЯ ФУНКЦИЯ РЕНДЕРА
-function renderScene(id) {
-  const data = scenes[id];
-  if (!data) return;
-
-  // Анимация затухания
-  const gameArea = document.querySelector('.game');
-  gameArea.style.opacity = '0';
-
-  setTimeout(() => {
-    // 1. Текст и заголовки
-    document.getElementById('scene-title').innerText = data.title;
-    document.getElementById('scene-text').innerHTML = data.text; // innerHTML для vocab-word
-
-    // 2. Mini English блок
-    const englishCont = document.getElementById('mini-english-content');
-    if (englishCont) {
-      englishCont.innerHTML = data.english || 'No new words in this scene.';
+// База данных сцен
+const scenes = {
+    scene1: {
+        title: 'Episode I · The Summons',
+        text: 'You stand before the gates of Ravenhill Estate. A cold wind rustles the dead leaves. To your left, a <span class="vocab-word">neglected</span> garden; ahead, the manor itself.',
+        english: '<b>Neglected</b> — заброшенный, в запустении.',
+        choices: [
+            { text: 'Enter the Grand Hall', next: 'scene2_hall' },
+            { text: 'Investigate the Garden', next: 'scene2_garden' }
+        ]
+    },
+    scene2_hall: {
+        title: 'The Grand Hall',
+        text: 'The heavy door <span class="vocab-word">creaks</span> open. Inside, you find a dusty table with an old diary.',
+        english: '<b>Creak</b> — скрипеть.',
+        choices: [
+            { text: 'Read the Diary', next: 'scene2_diary' },
+            { text: 'Go Back', next: 'scene1' }
+        ]
+    },
+    scene2_diary: {
+        title: 'The Diary',
+        text: 'The handwriting is shaky: "The house is watching me." You hear a sound from upstairs.',
+        english: '<b>Shaky</b> — дрожащий.',
+        sound: 'diary-voice',
+        choices: [{ text: 'Go upstairs', next: 'scene3' }]
+    },
+    scene2_garden: {
+        title: 'The Garden',
+        text: 'The roses are <span class="vocab-word">withered</span>. You find a strange silver key on the ground.',
+        english: '<b>Withered</b> — увядшие.',
+        choices: [{ text: 'Take the key and go to Hall', next: 'scene2_hall' }]
+    },
+    scene3: {
+        title: 'To be continued...',
+        text: 'The mystery deepens. Episode II coming soon!',
+        choices: []
     }
+};
 
-    // 3. Звук
-    if (data.sound) playSnd(data.sound);
+// Функция отрисовки
+function renderScene(id) {
+    const scene = scenes[id];
+    if (!scene) return;
+
+    document.getElementById('scene-title').innerText = scene.title;
+    document.getElementById('scene-text').innerHTML = scene.text;
+    document.getElementById('mini-english-content').innerHTML = scene.english || '';
+    
+    if (scene.sound) playSnd(scene.sound);
     playSnd('stepSound');
 
-    // 4. Кнопки
-    const choicesCont = document.querySelector('.choices');
-    choicesCont.innerHTML = '';
-    data.choices.forEach(ch => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.innerText = ch.text;
-      btn.onclick = () => {
-          playSnd('clickSound'); // Клик теперь работает на всех кнопках
-          renderScene(ch.next);
-      };
-      choicesCont.appendChild(btn);
+    const container = document.querySelector('.choices');
+    container.innerHTML = '';
+    scene.choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = ch.text;
+        btn.onclick = () => {
+            playSnd('clickSound');
+            renderScene(ch.next);
+        };
+        container.appendChild(btn);
     });
-
-    // Появление
-    gameArea.style.opacity = '1';
-  }, 400);
 }
+
+// Запуск игры
+document.getElementById('start-btn').onclick = () => {
+    playSnd('clickSound');
+    document.getElementById('start-screen').style.opacity = '0';
+    
+    setTimeout(() => {
+        document.getElementById('start-screen').style.display = 'none';
+        const game = document.getElementById('game-content');
+        game.style.display = 'block';
+        setTimeout(() => {
+            game.style.opacity = '1';
+            playSnd('bgMusic');
+            renderScene('scene1');
+        }, 50);
+    }, 800);
+};
