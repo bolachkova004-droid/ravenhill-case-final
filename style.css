@@ -50,13 +50,10 @@ body {
   z-index: 1;
 }
 
-.start-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%);
-  z-index: 2;
+.start-overlay, .start-bg {
+  pointer-events: none; /* Клики будут проходить СКВОЗЬ фон к кнопке */
+  z-index: 1;
 }
-
 .start-inner {
   position: relative;
   z-index: 100; /* Самый высокий приоритет для кликов */
