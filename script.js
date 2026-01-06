@@ -1,3 +1,4 @@
+// 1. СОСТОЯНИЕ ИГРЫ
 let state = {
     inventory: [],
     completedTasks: [],
@@ -10,15 +11,16 @@ const sound = {
         if (el) {
             el.currentTime = 0;
             if (id === 'uiClick') el.volume = 1.0;
-            el.play().catch(() => {});
+            el.play().catch(e => console.log("Sound error:", id));
         }
     }
 };
 
+// 2. ВСЕ СЦЕНЫ И ЗАДАНИЯ
 const scenes = {
     scene1: {
         title: 'Episode I · The Summons',
-        text: 'You stand before the gates of Ravenhill. Your radio starts buzzing. You need to <b>find out</b> what is happening.',
+        text: 'You stand before the gates of Ravenhill. They are <span class="vocab-word">locked</span>. You need to <b>find out</b> how to enter.',
         task: {
             id: 'task_find_out',
             question: 'What does "find out" mean?',
@@ -107,9 +109,9 @@ const scenes = {
         media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'Open the Secret Study', next: 'scene_study', require: 'secret_code' }]
     },
-       scene_study: {
+    scene_study: {
         title: 'Sir Henry\'s Study',
-        text: 'The wall swings open. You enter a secret room filled with maps and an old tape recorder on the desk.',
+        text: 'The wall swings open. You enter a secret room filled with maps and an old tape recorder.',
         english: '<b>Tape recorder</b> — магнитофон.',
         media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">',
         choices: [
@@ -117,30 +119,24 @@ const scenes = {
             { text: 'Return to the Hall', next: 'scene2_hall' }
         ]
     },
-
     scene_diary: {
         title: 'Elizabeth\'s Diary Recording',
-        text: 'You press play. Elizabeth\'s voice fills the room. She sounds scared, but determined.',
-        // Задание на понимание аудио/текста
+        text: 'Elizabeth\'s voice fills the room. She sounds scared, but determined.',
         task: {
             id: 'task_diary_fear',
             question: 'What is Elizabeth MOST afraid of?',
-            options: [
-                'That the house is watching her.',
-                'That the weather will get worse.'
-            ],
+            options: ['That the house is watching her.', 'That the weather will get worse.'],
             correct: 'That the house is watching her.',
             reward: 'diary_clue'
         },
-        english: '<b>Determined</b> — решительный, полный решимости.',
-        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px; margin-top:20px;">',
+        english: '<b>Determined</b> — решительный.',
+        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px;">',
         onEnter: () => sound.play('diary-voice'),
-        choices: [
-            { text: 'Back to the Study', next: 'scene_study' }
-        ]
+        choices: [{ text: 'Back to the Study', next: 'scene_study' }]
     }
 };
 
+// 3. ФУНКЦИИ ОТРИСОВКИ
 function renderScene(id) {
     const data = scenes[id];
     if (!data) return;
@@ -153,20 +149,18 @@ function renderScene(id) {
         document.getElementById('scene-text').innerHTML = data.text;
         document.getElementById('mini-english-content').innerHTML = data.english || '';
 
-        // ИНВЕНТАРЬ
-       const itemNames = {
-    'silver_key': '🗝️ Silver Key',
-    'access_hint': '📜 Radio Code',
-    'housekeeper_trust': '🤝 Trust',
-    'secret_code': '🔢 Secret Code',
-    'diary_clue': '📓 Diary Clue'
-};
-
+        // ИНВЕНТАРЬ (Словарь красивых имен)
+        const itemNames = {
+            'silver_key': '🗝️ Silver Key',
+            'access_hint': '📜 Radio Code',
+            'housekeeper_trust': '🤝 Trust',
+            'secret_code': '🔢 Code',
+            'diary_clue': '📓 Diary Clue'
         };
         document.getElementById('score-display').innerText = `Score: ${state.score} points`;
         const invEl = document.getElementById('inventory-display');
         if (invEl) {
-            const pretty = state.inventory.map(i => itemNames[i] || i);
+            const pretty = state.inventory.map(id => itemNames[id] || id);
             invEl.innerText = state.inventory.length ? 'Inventory: ' + pretty.join(', ') : 'Inventory: empty';
         }
 
@@ -177,15 +171,7 @@ function renderScene(id) {
         if (data.task && !state.completedTasks.includes(data.task.id)) {
             renderTask(data.task, choicesCont, id);
         } else {
-            data.choices.forEach(ch => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                const locked = ch.require && !state.inventory.includes(ch.require);
-                btn.innerText = locked ? `🔒 ${ch.text}` : ch.text;
-                btn.disabled = locked;
-                btn.onclick = () => { sound.play('uiClick'); renderScene(ch.next); };
-                choicesCont.appendChild(btn);
-            });
+            renderChoices(data.choices, choicesCont);
         }
 
         if (data.onEnter) data.onEnter();
@@ -194,14 +180,26 @@ function renderScene(id) {
     }, 400);
 }
 
+function renderChoices(choices, container) {
+    choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        const locked = ch.require && !state.inventory.includes(ch.require);
+        btn.innerText = locked ? `🔒 ${ch.text}` : ch.text;
+        btn.disabled = locked;
+        btn.onclick = () => { sound.play('uiClick'); renderScene(ch.next); };
+        container.appendChild(btn);
+    });
+}
+
 function renderTask(task, container, sceneId) {
     const div = document.createElement('div');
     div.className = 'task-panel';
-    div.innerHTML = `<p style="margin-bottom:15px;"><b>Task:</b> ${task.question}</p>`;
+    div.innerHTML = `<p style="margin-bottom:10px;"><b>Task:</b> ${task.question}</p>`;
     task.options.forEach(opt => {
         const b = document.createElement('button');
         b.className = 'choice-btn';
-        b.style.marginBottom = '10px';
+        b.style.marginBottom = '8px';
         b.innerText = opt;
         b.onclick = () => {
             if (opt === task.correct) {
@@ -210,24 +208,31 @@ function renderTask(task, container, sceneId) {
                 state.score += 50;
                 sound.play('uiClick');
                 renderScene(sceneId);
-            } else { alert('Try again!'); }
+            } else { alert('Wrong! Try again.'); }
         };
         div.appendChild(b);
     });
     container.appendChild(div);
 }
 
-document.getElementById('start-btn').onclick = () => {
-    sound.play('uiClick');
-    document.getElementById('start-screen').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('start-screen').style.display = 'none';
-        const game = document.getElementById('game-content');
-        game.style.display = 'block';
-        setTimeout(() => {
-            game.style.opacity = '1';
-            sound.play('bgMusic');
-            renderScene('scene1');
-        }, 50);
-    }, 800);
-};
+// 4. СЛУШАТЕЛЬ КЛИКА СТАРТА
+document.addEventListener('DOMContentLoaded', () => {
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.onclick = () => {
+            sound.play('uiClick');
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                const game = document.getElementById('game-content');
+                game.style.display = 'block';
+                setTimeout(() => {
+                    game.style.opacity = '1';
+                    sound.play('bgMusic');
+                    renderScene('scene1');
+                }, 50);
+            }, 800);
+        };
+    }
+});
+
