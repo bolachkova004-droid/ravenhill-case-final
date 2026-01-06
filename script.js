@@ -70,13 +70,34 @@ const scenes = {
         media: '<video src="assets/hall-intro.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px;"></video>',
         choices: [{ text: 'Examine the Portrait', next: 'scene_portrait' }]
     },
-    scene_portrait: {
-        title: 'Sir Henry\'s Portrait',
-        text: 'A stern man looks at you from the frame. You remember the note from the garden...',
+        scene_portrait_secret: {
+        title: 'The Hidden Mechanism',
+        text: 'You examine the frame of Sir Henry\'s portrait. Behind the canvas, you find a small keypad. A label says: "Only the one who _____ (understand) the past can enter."',
+        english: '<b>Canvas</b> — холст (картины).',
+        // ЗАДАНИЕ B1-B2 (Modals/Tenses)
+        task: {
+            id: 'task_modal_past',
+            question: 'Which sentence is correct about the past?',
+            options: ['He must have been rich.', 'He must be rich yesterday.'],
+            correct: 'He must have been rich.', // B2 level: Modal + Perfect Infinitive
+            reward: 'secret_code'
+        },
         media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'Search for a secret mechanism', next: 'scene1' }]
+        choices: [
+            { text: 'Enter the Code', next: 'scene_secret_study', require: 'secret_code' },
+            { text: 'Go back to the Hall', next: 'scene2_hall' }
+        ]
+    },
+    scene_secret_study: {
+        title: 'Sir Henry\'s Study',
+        text: 'The portrait swings open like a door. You enter a hidden room. It is a private study filled with old maps and a telescope.',
+        english: '<b>Study</b> — кабинет (комната для работы).',
+        media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">', // Промт ниже
+        choices: [
+            { text: 'Search the Desk', next: 'scene_desk_clue' },
+            { text: 'Exit through the portrait', next: 'scene2_hall' }
+        ]
     }
-};
 
 // 3. ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
 function renderScene(id) {
