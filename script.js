@@ -107,11 +107,37 @@ const scenes = {
         media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'Open the Secret Study', next: 'scene_study', require: 'secret_code' }]
     },
-    scene_study: {
+       scene_study: {
         title: 'Sir Henry\'s Study',
-        text: 'The wall swings open. You enter a secret room filled with maps.',
+        text: 'The wall swings open. You enter a secret room filled with maps and an old tape recorder on the desk.',
+        english: '<b>Tape recorder</b> — магнитофон.',
         media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'To be continued...', next: 'scene1' }]
+        choices: [
+            { text: 'Play Elizabeth\'s diary', next: 'scene_diary' },
+            { text: 'Return to the Hall', next: 'scene2_hall' }
+        ]
+    },
+
+    scene_diary: {
+        title: 'Elizabeth\'s Diary Recording',
+        text: 'You press play. Elizabeth\'s voice fills the room. She sounds scared, but determined.',
+        // Задание на понимание аудио/текста
+        task: {
+            id: 'task_diary_fear',
+            question: 'What is Elizabeth MOST afraid of?',
+            options: [
+                'That the house is watching her.',
+                'That the weather will get worse.'
+            ],
+            correct: 'That the house is watching her.',
+            reward: 'diary_clue'
+        },
+        english: '<b>Determined</b> — решительный, полный решимости.',
+        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px; margin-top:20px;">',
+        onEnter: () => sound.play('diary-voice'),
+        choices: [
+            { text: 'Back to the Study', next: 'scene_study' }
+        ]
     }
 };
 
