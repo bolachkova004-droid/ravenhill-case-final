@@ -115,12 +115,14 @@ function renderScene(id) {
         // ОБНОВЛЕНИЕ СТАТУСА (Раздельно)
         document.getElementById('score-display').innerText = `Score: ${state.score} points`;
                 // 1. Словарь красивых имен
-        const itemNames = {
-            'silver_key': '🗝️ Silver Key',
-            'access_hint': '📜 Radio Code',
-            'old_photo': '🖼️ Old Photo',
-            'housekeeper_trust': '🤝 Housekeeper\'s Trust'
-        };
+       const itemNames = {
+    'silver_key': '🗝️ Silver Key',
+    'access_hint': '📜 Radio Code',
+    'old_photo': '🖼️ Old Photo',
+    'secret_code': '🔢 Secret Code', // Добавили это
+    'housekeeper_trust': '🤝 Housekeeper\'s Trust'
+};
+
 
         // 2. Обновление отображения
         const invEl = document.getElementById('inventory-display');
