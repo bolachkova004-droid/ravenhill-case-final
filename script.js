@@ -154,11 +154,14 @@ function renderScene(id) {
         document.getElementById('mini-english-content').innerHTML = data.english || '';
 
         // ИНВЕНТАРЬ
-        const itemNames = {
-            'silver_key': '🗝️ Silver Key',
-            'access_hint': '📜 Radio Code',
-            'housekeeper_trust': '🤝 Trust',
-            'secret_code': '🔢 Code'
+       const itemNames = {
+    'silver_key': '🗝️ Silver Key',
+    'access_hint': '📜 Radio Code',
+    'housekeeper_trust': '🤝 Trust',
+    'secret_code': '🔢 Secret Code',
+    'diary_clue': '📓 Diary Clue'
+};
+
         };
         document.getElementById('score-display').innerText = `Score: ${state.score} points`;
         const invEl = document.getElementById('inventory-display');
