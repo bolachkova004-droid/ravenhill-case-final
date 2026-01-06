@@ -1,9 +1,11 @@
+/* 1. ШРИФТЫ И ПЕРЕМЕННЫЕ */
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Montserrat:wght@300;500;600&display=swap');
 
 :root {
   --gold: #c9a46d;
   --bg-dark: #050609;
   --panel-bg: rgba(15, 12, 8, 0.92);
+  --text-cream: #f5f1e8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,129 +13,86 @@
 body { 
   font-family: 'Montserrat', sans-serif; 
   background: var(--bg-dark); 
-  color: #f5f1e8; 
+  color: var(--text-cream); 
   overflow-x: hidden;
 }
 
-/* СТАРТОВЫЙ ЭКРАН (Исправлено центрирование) */
+/* 2. СТАРТОВЫЙ ЭКРАН */
 .start-screen {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  background: black;
-  transition: opacity 0.8s ease;
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; background: black; transition: opacity 0.8s ease;
 }
+.start-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 1; }
+.start-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent, black); z-index: 2; pointer-events: none; }
+.start-inner { position: relative; z-index: 10; text-align: center; }
+.start-title { font-family: 'Crimson Text', serif; font-size: clamp(3rem, 10vw, 6rem); color: var(--gold); letter-spacing: 0.3em; margin-bottom: 10px; }
 
-.start-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-  z-index: 1;
-}
-
-.start-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, transparent, black);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.start-inner {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  width: 100%;
-  padding: 20px;
-}
-
-.start-title {
-  font-family: 'Crimson Text', serif;
-  font-size: clamp(3rem, 10vw, 6rem);
-  color: var(--gold);
-  letter-spacing: 0.3em;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-
-/* КНОПКА СТАРТА (Крупная и активная) */
 .start-btn {
-  display: inline-block;
-  margin: 40px auto;
-  padding: 20px 60px;
-  background: #1b1e29;
-  border: 2px solid var(--gold);
-  color: var(--gold);
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 0.3s;
-  pointer-events: auto;
+  display: inline-block; margin: 40px auto; padding: 20px 60px;
+  background: #1b1e29; border: 2px solid var(--gold); color: var(--gold);
+  font-weight: bold; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: 0.3s;
 }
+.start-btn:hover { background: var(--gold); color: black; box-shadow: 0 0 25px var(--gold); }
 
-.start-btn:hover {
-  background: var(--gold);
-  color: black;
-  box-shadow: 0 0 25px var(--gold);
-}
-
-/* ИГРОВОЕ ПОЛЕ */
+/* 3. ИГРОВОЕ ПОЛЕ И СЦЕНА */
 .game-content {
-  display: none;
-  opacity: 0;
-  transition: opacity 1s;
+  display: none; opacity: 0; transition: opacity 1s;
   background: url('assets/board2.webp') center/cover fixed;
-  min-height: 100vh;
-  padding: 40px 20px;
+  min-height: 100vh; padding: 40px 20px;
 }
 
 .scene {
   max-width: 850px;
   margin: 40px auto;
   background: var(--panel-bg);
-  padding: 40px;
+  padding: 45px;
   border: 1px solid var(--gold);
-  position: relative;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  position: relative; /* Нужно для позиционирования уголков */
+  box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+  transition: opacity 0.4s ease;
+  background-image: radial-gradient(circle at center, rgba(201,164,109,0.05) 0%, transparent 100%);
 }
 
-.scene::before {
+/* ДЕКОРАТИВНЫЕ УГОЛКИ (ВИКТОРИАНСКИЙ СТИЛЬ) */
+.scene::before, .scene::after {
   content: "";
   position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border: 1px solid rgba(201, 164, 109, 0.2);
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gold);
   pointer-events: none;
+  z-index: 5;
 }
 
-#scene-title {
-  font-family: 'Crimson Text', serif;
-  color: var(--gold);
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-align: center;
+/* Верхний левый угол */
+.scene::before {
+  top: -8px;
+  left: -8px;
+  border-right: none;
+  border-bottom: none;
 }
 
-#scene-text {
-  line-height: 1.8;
-  font-size: 1.15rem;
-  margin-bottom: 20px;
+/* Нижний правый угол */
+.scene::after {
+  bottom: -8px;
+  right: -8px;
+  border-left: none;
+  border-top: none;
 }
 
-/* КНОПКИ ВЫБОРА */
+#scene-title { font-family: 'Crimson Text', serif; color: var(--gold); font-size: 2.5rem; margin-bottom: 20px; text-align: center; }
+#scene-text { line-height: 1.8; font-size: 1.15rem; margin-bottom: 20px; }
+
+/* 4. КНОПКИ ВЫБОРА И ЗАДАНИЯ */
 .choices {
   display: flex;
   flex-direction: column;
   gap: 15px;
   max-width: 500px;
   margin: 30px auto;
+  position: relative;
+  z-index: 20;
 }
 
 .choice-btn {
@@ -141,38 +100,42 @@ body {
   background: #12141c;
   border: 1px solid var(--gold);
   color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.choice-btn:hover {
+.choice-btn:hover:not(:disabled) {
   background: var(--gold);
   color: black;
+  transform: translateY(-2px);
 }
 
-/* ПАНЕЛИ АНГЛИЙСКОГО */
-.panels-container {
-  max-width: 850px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+/* СТИЛЬ ДЛЯ ЗАБЛОКИРОВАННЫХ КНОПОК */
+.choice-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(1);
+  border-color: #444;
+  color: #666;
 }
 
-.mini-english, .status {
-  background: rgba(0,0,0,0.7);
+/* ПАНЕЛЬ ЗАДАНИЯ (Grammar Task) */
+.task-panel {
+  background: rgba(201, 164, 109, 0.1);
+  border-left: 4px solid var(--gold);
   padding: 20px;
-  border: 1px solid rgba(201, 164, 109, 0.3);
+  margin: 20px 0;
+  border-radius: 4px;
 }
 
-.vocab-word {
-  color: var(--gold);
-  font-weight: 600;
-  border-bottom: 1px dashed var(--gold);
-  cursor: help;
-}
+/* 5. ПАНЕЛИ АНГЛИЙСКОГО И СТАТУСА */
+.panels-container { max-width: 850px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.mini-english, .status { background: rgba(0,0,0,0.7); padding: 20px; border: 1px solid rgba(201, 164, 109, 0.3); }
+.mini-english h3, .status h3 { color: var(--gold); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; }
 
-@media (max-width: 768px) {
-  .panels-container { grid-template-columns: 1fr; }
-}
+.vocab-word { color: var(--gold); font-weight: 600; border-bottom: 1px dashed var(--gold); cursor: help; }
+
+@media (max-width: 768px) { .panels-container { grid-template-columns: 1fr; } }
