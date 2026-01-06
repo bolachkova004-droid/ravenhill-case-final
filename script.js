@@ -93,8 +93,21 @@ function renderScene(id) {
         
         // ОБНОВЛЕНИЕ СТАТУСА (Раздельно)
         document.getElementById('score-display').innerText = `Score: ${state.score} points`;
+                // 1. Словарь красивых имен
+        const itemNames = {
+            'silver_key': '🗝️ Silver Key',
+            'access_hint': '📜 Radio Code',
+            'old_photo': '🖼️ Old Photo',
+            'housekeeper_trust': '🤝 Housekeeper\'s Trust'
+        };
+
+        // 2. Обновление отображения
         const invEl = document.getElementById('inventory-display');
-        if (invEl) invEl.innerText = state.inventory.length ? 'Inventory: ' + state.inventory.join(', ') : 'Inventory: empty';
+        if (invEl) {
+            const prettyItems = state.inventory.map(id => itemNames[id] || id);
+            invEl.innerText = state.inventory.length ? 'Inventory: ' + prettyItems.join(', ') : 'Inventory: empty';
+        }
+
 
         document.getElementById('clue-media').innerHTML = data.media || '';
 
