@@ -1,22 +1,23 @@
-// 1. СОСТОЯНИЕ ИГРЫ
+// ПРОВЕРКА ЗАГРУЗКИ
+console.log("Script.js загружен успешно!");
+
 let state = {
     inventory: [],
     completedTasks: [],
     score: 0
 };
 
+// БЕЗОПАСНЫЙ ЗВУК
 const sound = {
     play: (id) => {
         const el = document.getElementById(id);
         if (el) {
             el.currentTime = 0;
-            if (id === 'uiClick') el.volume = 1.0;
-            el.play().catch(e => console.log("Sound error:", id));
+            el.play().catch(() => console.warn("Звук заблокирован или не найден:", id));
         }
     }
 };
 
-// 2. ВСЕ СЦЕНЫ И ЗАДАНИЯ
 const scenes = {
     scene1: {
         title: 'Episode I · The Summons',
@@ -32,21 +33,13 @@ const scenes = {
         media: '<img src="assets/gates.png" style="width:100%; border-radius:12px;">',
         choices: [
             { text: 'Search the Garden', next: 'scene_garden' },
-            { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
-            { text: 'Enter Hall (Requires Key)', next: 'scene2_hall', require: 'silver_key' }
+            { text: 'Enter the Hall (Requires Hint)', next: 'scene2_hall', require: 'access_hint' }
         ]
-    },
-    scene_radio: {
-        title: 'Radio Message',
-        text: 'Static noise... then a voice: "Detective, check the garden! There is a box hidden near the roses."',
-        onEnter: () => sound.play('radioSound'),
-        media: '<video src="assets/radio-scene.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px;"></video>',
-        choices: [{ text: 'Go to Garden', next: 'scene_garden' }]
     },
     scene_garden: {
         title: 'The Silent Garden',
         text: 'Among the withered roses, you see a <span class="vocab-word">concealed</span> wooden box.',
-        english: '<b>Concealed</b> — скрытый, спрятанный.',
+        english: '<b>Concealed</b> — скрытый.',
         media: '<img src="assets/garden.png" style="width:100%; border-radius:12px;">',
         choices: [
             { text: 'Open the box', next: 'scene_box_task' },
@@ -65,117 +58,67 @@ const scenes = {
         },
         media: '<img src="assets/box.png" style="width:100%; border-radius:12px;">',
         choices: [
-            { text: 'Examine the note inside', next: 'scene_box_note', require: 'silver_key' },
-            { text: 'Go to Gates with Key', next: 'scene1' }
+            { text: 'Examine the note', next: 'scene_box_note', require: 'silver_key' },
+            { text: 'Back to Gates', next: 'scene1' }
         ]
     },
     scene_box_note: {
         title: 'The Secret Note',
         text: 'The note says: "Do NOT trust the portraits. They are watching you."',
-        english: '<b>Folded</b> — сложенный.',
         media: '<img src="assets/box.png" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'Go to Gates', next: 'scene1' }]
+        choices: [{ text: 'Back to Gates', next: 'scene1' }]
     },
     scene2_hall: {
         title: 'The Grand Hall',
-        text: 'The door creaks open. A woman in a black dress stands by the stairs. She looks <span class="vocab-word">terrified</span>.',
-        english: '<b>Terrified</b> — в ужасе.',
+        text: 'The door creaks open. You are inside.',
         media: '<video src="assets/hall-intro.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px;"></video>',
-        choices: [{ text: 'Talk to the Housekeeper', next: 'scene_housekeeper' }]
-    },
-    scene_housekeeper: {
-        title: 'The Housekeeper',
-        text: '"You shouldn\'t be here! Sir Henry _____ (watch) everyone for years!"',
-        task: {
-            id: 'task_tense',
-            question: 'Choose the correct tense (B2 level):',
-            options: ['has been watching', 'is watching'],
-            correct: 'has been watching',
-            reward: 'housekeeper_trust'
-        },
-        media: '<img src="assets/housekeeper.png" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'Ask about the Portraits', next: 'scene_portrait_secret', require: 'housekeeper_trust' }]
-    },
-    scene_portrait_secret: {
-        title: 'The Hidden Keypad',
-        text: 'Behind Sir Henry\'s portrait, you find a keypad. A label says: "Only the one who _____ (understand) the past can enter."',
-        task: {
-            id: 'task_modal',
-            question: 'Which is correct about the past?',
-            options: ['He must have been rich.', 'He must be rich yesterday.'],
-            correct: 'He must have been rich.',
-            reward: 'secret_code'
-        },
-        media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'Open the Secret Study', next: 'scene_study', require: 'secret_code' }]
-    },
-    scene_study: {
-        title: 'Sir Henry\'s Study',
-        text: 'The wall swings open. You enter a secret room filled with maps and an old tape recorder.',
-        english: '<b>Tape recorder</b> — магнитофон.',
-        media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">',
-        choices: [
-            { text: 'Play Elizabeth\'s diary', next: 'scene_diary' },
-            { text: 'Return to the Hall', next: 'scene2_hall' }
-        ]
-    },
-    scene_diary: {
-        title: 'Elizabeth\'s Diary Recording',
-        text: 'Elizabeth\'s voice fills the room. She sounds scared, but determined.',
-        task: {
-            id: 'task_diary_fear',
-            question: 'What is Elizabeth MOST afraid of?',
-            options: ['That the house is watching her.', 'That the weather will get worse.'],
-            correct: 'That the house is watching her.',
-            reward: 'diary_clue'
-        },
-        english: '<b>Determined</b> — решительный.',
-        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px;">',
-        onEnter: () => sound.play('diary-voice'),
-        choices: [{ text: 'Back to the Study', next: 'scene_study' }]
+        choices: [{ text: 'Start over', next: 'scene1' }]
     }
 };
 
-// 3. ФУНКЦИИ ОТРИСОВКИ
 function renderScene(id) {
     const data = scenes[id];
-    if (!data) return;
+    if (!data) {
+        console.error("Сцена не найдена:", id);
+        return;
+    }
 
     const gameArea = document.querySelector('.game');
-    gameArea.style.opacity = '0';
+    if (gameArea) gameArea.style.opacity = '0';
 
     setTimeout(() => {
-        document.getElementById('scene-title').innerText = data.title;
-        document.getElementById('scene-text').innerHTML = data.text;
-        document.getElementById('mini-english-content').innerHTML = data.english || '';
-
-        // ИНВЕНТАРЬ (Словарь красивых имен)
-        const itemNames = {
-            'silver_key': '🗝️ Silver Key',
-            'access_hint': '📜 Radio Code',
-            'housekeeper_trust': '🤝 Trust',
-            'secret_code': '🔢 Code',
-            'diary_clue': '📓 Diary Clue'
-        };
-        document.getElementById('score-display').innerText = `Score: ${state.score} points`;
+        // Безопасное обновление элементов
+        const titleEl = document.getElementById('scene-title');
+        const textEl = document.getElementById('scene-text');
+        const engEl = document.getElementById('mini-english-content');
+        const scoreEl = document.getElementById('score-display');
         const invEl = document.getElementById('inventory-display');
+        const mediaEl = document.getElementById('clue-media');
+
+        if (titleEl) titleEl.innerText = data.title;
+        if (textEl) textEl.innerHTML = data.text;
+        if (engEl) engEl.innerHTML = data.english || '';
+        if (scoreEl) scoreEl.innerText = `Score: ${state.score}`;
+        
         if (invEl) {
-            const pretty = state.inventory.map(id => itemNames[id] || id);
-            invEl.innerText = state.inventory.length ? 'Inventory: ' + pretty.join(', ') : 'Inventory: empty';
+            const itemNames = { 'silver_key': '🗝️ Key', 'access_hint': '📜 Radio Code' };
+            const pretty = state.inventory.map(i => itemNames[i] || i);
+            invEl.innerText = state.inventory.length ? 'Items: ' + pretty.join(', ') : 'Items: empty';
         }
 
-        document.getElementById('clue-media').innerHTML = data.media || '';
+        if (mediaEl) mediaEl.innerHTML = data.media || '';
+
         const choicesCont = document.querySelector('.choices');
-        choicesCont.innerHTML = '';
-
-        if (data.task && !state.completedTasks.includes(data.task.id)) {
-            renderTask(data.task, choicesCont, id);
-        } else {
-            renderChoices(data.choices, choicesCont);
+        if (choicesCont) {
+            choicesCont.innerHTML = '';
+            if (data.task && !state.completedTasks.includes(data.task.id)) {
+                renderTask(data.task, choicesCont, id);
+            } else {
+                renderChoices(data.choices, choicesCont);
+            }
         }
 
-        if (data.onEnter) data.onEnter();
-        gameArea.style.opacity = '1';
+        if (gameArea) gameArea.style.opacity = '1';
         sound.play('stepSound');
     }, 400);
 }
@@ -195,11 +138,10 @@ function renderChoices(choices, container) {
 function renderTask(task, container, sceneId) {
     const div = document.createElement('div');
     div.className = 'task-panel';
-    div.innerHTML = `<p style="margin-bottom:10px;"><b>Task:</b> ${task.question}</p>`;
+    div.innerHTML = `<p><b>Task:</b> ${task.question}</p>`;
     task.options.forEach(opt => {
         const b = document.createElement('button');
         b.className = 'choice-btn';
-        b.style.marginBottom = '8px';
         b.innerText = opt;
         b.onclick = () => {
             if (opt === task.correct) {
@@ -208,31 +150,34 @@ function renderTask(task, container, sceneId) {
                 state.score += 50;
                 sound.play('uiClick');
                 renderScene(sceneId);
-            } else { alert('Wrong! Try again.'); }
+            } else { alert('Try again!'); }
         };
         div.appendChild(b);
     });
     container.appendChild(div);
 }
 
-// 4. СЛУШАТЕЛЬ КЛИКА СТАРТА
-document.addEventListener('DOMContentLoaded', () => {
+// ПРЯМАЯ ПРИВЯЗКА КНОПКИ (Без DOMContentLoaded для надежности)
+window.onload = () => {
     const startBtn = document.getElementById('start-btn');
+    console.log("Кнопка найдена:", !!startBtn);
+    
     if (startBtn) {
         startBtn.onclick = () => {
+            console.log("Клик по кнопке Старт сработал!");
             sound.play('uiClick');
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.display = 'none';
-                const game = document.getElementById('game-content');
-                game.style.display = 'block';
+                document.getElementById('game-content').style.display = 'block';
                 setTimeout(() => {
-                    game.style.opacity = '1';
+                    document.getElementById('game-content').style.opacity = '1';
                     sound.play('bgMusic');
                     renderScene('scene1');
                 }, 50);
             }, 800);
         };
     }
-});
+};
+
 
