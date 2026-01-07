@@ -202,12 +202,15 @@ function renderScene(id) {
 
         // ИНВЕНТАРЬ
         const itemNames = {
-            'silver_key': '🗝️ Silver Key',
-            'access_hint': '📜 Radio Code',
-            'housekeeper_trust': '🤝 Trust',
-            'secret_code': '🔢 Code',
-            'diary_clue': '📓 Diary Clue'
-        };
+    'silver_key': '🗝️ Silver Key',
+    'access_hint': '📜 Radio Code',
+    'housekeeper_trust': '🤝 Trust',
+    'secret_code': '🔢 Code',
+    'diary_clue': '📓 Diary Clue',
+    'basement_map': '🗺️ Basement Map', // Новое
+    'old_photo': '🖼️ Elizabeth\'s Photo' // Новое
+};
+
         const scoreEl = document.getElementById('score-display');
         const invEl = document.getElementById('inventory-display');
         if (scoreEl) scoreEl.innerText = `Score: ${state.score} points`;
