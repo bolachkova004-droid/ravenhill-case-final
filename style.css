@@ -1,77 +1,166 @@
-body {
-    background-color: #0d0d0d;
-    color: #f2f2f2;
-    font-family: 'Cinzel', serif; /* Или 'Georgia', если нет Cinzel */
+/* --- 1. БАЗОВЫЕ НАСТРОЙКИ --- */
+body, html {
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0d0d0d;
+    color: #f2f2f2;
+    font-family: 'Georgia', serif;
+    overflow-x: hidden;
+}
+
+/* --- 2. СТАРТОВЫЙ ЭКРАН (Board2) --- */
+.start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
-.game-container {
+.start-bg {
+    position: absolute;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.start-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+.start-title {
+    font-size: 5rem;
+    letter-spacing: 15px;
+    margin: 0;
+    color: #e67e22;
+    text-shadow: 0 0 20px rgba(230, 126, 34, 0.5);
+}
+
+.start-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background: none;
+    border: 2px solid #e67e22;
+    color: #e67e22;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: 0.4s;
+}
+
+.start-btn:hover {
+    background: #e67e22;
+    color: #000;
+    box-shadow: 0 0 30px rgba(230, 126, 34, 0.8);
+}
+
+/* --- 3. ИГРОВОЙ ИНТЕРФЕЙС --- */
+.game-content {
     max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
-/* Главная картинка на весь экран, как на ваших первых скринах */
-#media-container img, #media-container video {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-bottom: 2px solid #e67e22; /* Тонкая золотая линия-разделитель */
+.header h1 {
+    text-align: center;
+    color: #e67e22;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    border-bottom: 1px solid rgba(230, 126, 34, 0.3);
+    padding-bottom: 20px;
 }
 
-/* Контент под картинкой */
-.content-box {
-    padding: 30px 50px;
+/* Секция сцены */
+.scene {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid rgba(230, 126, 34, 0.2);
+    margin-bottom: 30px;
+}
+
+.case-file {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #e67e22;
+    margin-bottom: 10px;
 }
 
 #scene-text {
-    font-size: 1.4rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    color: #e0e0e0;
+    font-size: 1.3rem;
+    line-height: 1.7;
+    margin: 20px 0;
 }
 
-#english-note {
-    font-size: 1.1rem;
-    color: #e67e22; /* Золотистый цвет для подсказок */
-    margin-bottom: 30px;
-    border-top: 1px solid rgba(230, 126, 34, 0.3);
-    padding-top: 15px;
+/* Медиа (Картинки/Видео) */
+.clue-media img, .clue-media video {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #333;
+    margin-top: 20px;
 }
 
-/* ТЕ САМЫЕ КНОПКИ (возвращаем старый дизайн) */
-#choices-container {
+/* Кнопки выбора */
+.choices {
     display: flex;
-    gap: 20px;
-    padding: 0 50px 50px 50px;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
 }
 
 .choice-btn {
-    background: none;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid #e67e22;
-    color: #e67e22;
-    padding: 15px 30px;
+    color: white;
+    padding: 12px 25px;
     font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.4s;
+    transition: 0.3s;
 }
 
 .choice-btn:hover {
     background: #e67e22;
-    color: #000;
-    box-shadow: 0 0 15px rgba(230, 126, 34, 0.5);
+    color: black;
 }
 
-/* Анимация появления */
-.game-text {
-    opacity: 0;
-    transition: opacity 1s ease;
+/* --- 4. НИЖНИЕ ПАНЕЛИ (English & Status) --- */
+.panels-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
-.game-text.visible {
-    opacity: 1;
+
+.mini-english, .status {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.mini-english h3, .status h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: #e67e22;
+    text-transform: uppercase;
+}
+
+/* Стили для новых слов */
+.vocab-word {
+    color: #e67e22;
+    font-weight: bold;
+    border-bottom: 1px dashed #e67e22;
 }
