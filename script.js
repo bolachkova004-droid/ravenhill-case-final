@@ -248,12 +248,43 @@ const scenes = {
 };
 
 // --- 4. ФУНКЦИИ ОТРИСОВКИ ---
-function renderScene(id) {
-    const data = scenes[id];
-    if (!data) return;
+function renderScene(sceneId) {
+    const scene = scenes[sceneId];
+    if (!scene) return;
 
-    const gameArea = document.querySelector('.game');
-    if (gameArea) gameArea.style.opacity = '0';
+    const textElement = document.getElementById('scene-text');
+    const progressBar = document.getElementById('progress-bar');
+
+    // 1. Двигаем полоску прогресса
+    // Считаем: (номер текущей сцены / общее кол-во сцен) * 100%
+    const total = Object.keys(scenes).length;
+    const current = Object.keys(scenes).indexOf(sceneId) + 1;
+    progressBar.style.width = (current / total * 100) + "%";
+
+    // 2. Анимация текста
+    textElement.classList.remove('visible'); // Прячем старый текст
+    
+    // Ждем 50 миллисекунд (мгновение), чтобы браузер успел применить прозрачность
+    setTimeout(() => {
+        textElement.innerHTML = scene.text; // Вставляем новый текст
+        textElement.classList.add('visible'); // Включаем плавное появление
+    }, 50);
+
+    // 3. Рисуем кнопки (как и раньше)
+    const choicesContainer = document.getElementById('choices-container');
+    choicesContainer.innerHTML = '';
+
+    scene.choices.forEach(choice => {
+        // Проверка: есть ли у игрока нужный предмет для этой кнопки
+        if (!choice.require || inventory.has(choice.require)) {
+            const btn = document.createElement('button');
+            btn.innerText = choice.text;
+            btn.className = 'choice-btn'; // Если у вас есть стиль для кнопок
+            btn.onclick = () => renderScene(choice.next);
+            choicesContainer.appendChild(btn);
+        }
+    });
+}
 
     setTimeout(() => {
         // Тексты
