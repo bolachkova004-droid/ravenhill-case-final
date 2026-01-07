@@ -80,7 +80,7 @@ const scenes = {
     },
     scene2_hall: {
         title: 'The Grand Hall',
-        text: 'The door creaks open. You are inside. A woman in a black dress stands by the stairs. She looks <span class="vocab-word">terrified</span>.',
+        text: 'The door creaks open. A woman in a black dress stands by the stairs. She looks <span class="vocab-word">terrified</span>.',
         english: '<b>Terrified</b> — в ужасе.',
         media: '<video src="assets/hall-intro.mp4" autoplay loop muted playsinline style="width:100%; border-radius:12px;"></video>',
         choices: [{ text: 'Talk to the Housekeeper', next: 'scene_housekeeper' }]
@@ -100,7 +100,7 @@ const scenes = {
     },
     scene_portrait_secret: {
         title: 'The Hidden Keypad',
-        text: 'Behind Sir Henry\'s portrait, you find a keypad. A label says: "Only the one who _____ (understand) the past can enter."',
+        text: 'Behind Sir Henry\'s portrait, you find a keypad. "Only the one who _____ (understand) the past can enter."',
         task: {
             id: 'task_modal',
             question: 'Which sentence is correct about the past?',
@@ -111,13 +111,14 @@ const scenes = {
         media: '<img src="assets/sir-henry.jpg" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'Open the Secret Study', next: 'scene_study', require: 'secret_code' }]
     },
+    // ВНИМАНИЕ: ОБНОВЛЕННАЯ СЦЕНА КАБИНЕТА
     scene_study: {
         title: 'Sir Henry\'s Study',
-        text: 'You enter a secret room. There is an old tape recorder and a massive mahogany desk.',
+        text: 'A secret room filled with maps. There is a tape recorder and a massive mahogany desk.',
         media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">',
         choices: [
             { text: 'Play the Diary Recording', next: 'scene_diary' },
-            { text: 'Examine the Desk', next: 'scene_study_desk' }, // ВОТ ЭТОТ ПЕРЕХОД НУЖЕН
+            { text: 'Examine the Mahogany Desk', next: 'scene_study_desk' },
             { text: 'Return to the Hall', next: 'scene2_hall' }
         ]
     },
@@ -127,26 +128,27 @@ const scenes = {
         task: {
             id: 'task_diary_fear',
             question: 'What is Elizabeth MOST afraid of?',
-            options: ['That the house is watching her.', 'That the weather will get worse.'],
+            options: ['That the house is watching her.', 'The weather.'],
             correct: 'That the house is watching her.',
             reward: 'diary_clue'
         },
-        english: '<b>Determined</b> — решительный.',
-        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px;">',
         onEnter: () => sound.play('diary-voice'),
-        choices: [{ text: 'Back to the Study', next: 'scene_study' }]
+        media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px;">',
+        choices: [
+            { text: 'Back to the Study', next: 'scene_study' },
+            { text: 'Examine the Desk', next: 'scene_study_desk' } // Кнопка сразу для удобства
+        ]
     },
     scene_study_desk: {
         title: 'The Mahogany Desk',
-        text: 'On the desk, you find a letter. It _____ (write) by Elizabeth many years ago.',
+        text: 'On the desk, you find a letter. It _____ (write) by Elizabeth.',
         task: {
             id: 'task_passive',
-            question: 'Choose the correct Passive Voice form:',
+            question: 'Choose the correct Passive Voice:',
             options: ['was written', 'was write'],
             correct: 'was written',
             reward: 'basement_map'
         },
-        english: '<b>Mahogany</b> — красное дерево.',
         media: '<img src="assets/desk.png" style="width:100%; border-radius:12px;">',
         choices: [
             { text: 'Look for the trapdoor', next: 'scene_trapdoor', require: 'basement_map' },
@@ -163,18 +165,14 @@ const scenes = {
             correct: 'were',
             reward: 'trapdoor_open'
         },
-        english: '<b>Trapdoor</b> — люк.',
         media: '<img src="assets/trapdoor.png" style="width:100%; border-radius:12px;">',
-        choices: [
-            { text: 'Go into the Basement', next: 'scene_basement', require: 'trapdoor_open' }
-        ]
+        choices: [{ text: 'Go into the Basement', next: 'scene_basement', require: 'trapdoor_open' }]
     },
     scene_basement: {
         title: 'The Basement',
         text: 'It is pitch black. You find the old photo Elizabeth mentioned.',
-        english: '<b>Pitch black</b> — полная темнота.',
         media: '<img src="assets/basement.png" style="width:100%; border-radius:12px;">',
-        choices: [{ text: 'Take the photo and return to Gates', next: 'scene1', reward: 'old_photo' }]
+        choices: [{ text: 'Take photo and leave', next: 'scene1', reward: 'old_photo' }]
     }
 };
 
