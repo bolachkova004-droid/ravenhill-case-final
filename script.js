@@ -136,7 +136,51 @@ const scenes = {
         media: '<img src="assets/diary-mystical.png" style="width:100%; border-radius:12px;">',
         onEnter: () => sound.play('diary-voice'),
         choices: [{ text: 'Back to the Study', next: 'scene_study' }]
+    },
+        // --- ПРОДОЛЖЕНИЕ ПОСЛЕ ДНЕВНИКА ---
+    scene_study_desk: {
+        title: 'The Mahogany Desk',
+        text: 'On the desk, you find a letter. It _____ (write) by Elizabeth many years ago.',
+        task: {
+            id: 'task_passive_voice',
+            question: 'Choose the correct Passive Voice form:',
+            options: ['was written', 'was write', 'had written'],
+            correct: 'was written', // B1 level: Past Simple Passive
+            reward: 'basement_map'
+        },
+        english: '<b>Mahogany</b> — красное дерево.',
+        media: '<img src="assets/desk.png" style="width:100%; border-radius:12px;">', // Промт ниже
+        choices: [
+            { text: 'Look for the trapdoor', next: 'scene_trapdoor', require: 'basement_map' },
+            { text: 'Back to Study', next: 'scene_study' }
+        ]
+    },
+    scene_trapdoor: {
+        title: 'The Trapdoor',
+        text: 'The map leads you to a rug. Under it, you find a heavy iron ring. A voice in your head says: "If I _____ (be) you, I would leave now."',
+        task: {
+            id: 'task_conditional',
+            question: 'Complete the Second Conditional (B1-B2):',
+            options: ['were', 'am', 'will be'],
+            correct: 'were', 
+            reward: 'trapdoor_open'
+        },
+        english: '<b>Trapdoor</b> — люк в полу.',
+        media: '<img src="assets/trapdoor.png" style="width:100%; border-radius:12px;">',
+        choices: [
+            { text: 'Descend into the Basement', next: 'scene_basement', require: 'trapdoor_open' }
+        ]
+    },
+    scene_basement: {
+        title: 'The Basement',
+        text: 'It is pitch black. You find the old photo Elizabeth mentioned. It shows Sir Henry with a strange man.',
+        english: '<b>Pitch black</b> — хоть глаз выколи (полная темнота).',
+        media: '<img src="assets/basement.png" style="width:100%; border-radius:12px;">',
+        choices: [
+            { text: 'Take the photo', next: 'scene1', reward: 'old_photo' }
+        ]
     }
+
 };
 
 // --- 4. ФУНКЦИИ ОТРИСОВКИ ---
