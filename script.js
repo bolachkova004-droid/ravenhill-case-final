@@ -214,6 +214,35 @@ const scenes = {
         english: '<b>Solved</b> — разгадана.',
         media: '<img src="assets/attic.png" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'To be continued...', next: 'scene1' }]
+    },
+        scene_attic: {
+        title: 'The Dusty Attic',
+        text: 'You find a trunk. Inside, there is a letter and a broken mirror. "I _____ (look) for this for ages!" you exclaim.',
+        task: {
+            id: 'task_present_perfect_cont',
+            question: 'Which tense shows a long action starting in the past and continuing until now?',
+            options: ['have been looking', 'had looked'],
+            correct: 'have been looking',
+            reward: 'elizabeth_letter'
+        },
+        english: '<b>Trunk</b> — сундук. <b>For ages</b> — целую вечность.',
+        media: '<img src="assets/attic.png" style="width:100%; border-radius:12px;">',
+        choices: [{ text: 'Read Elizabeth\'s Letter', next: 'scene_final_revelation', require: 'elizabeth_letter' }]
+    },
+
+    scene_final_revelation: {
+        title: 'The Revelation',
+        text: 'The letter says: "Sir Henry didn\'t disappear. He is _____ (hide) in the library behind the fake bookshelf!"',
+        task: {
+            id: 'task_gerund',
+            question: 'Choose the correct form:',
+            options: ['hiding', 'hidden'],
+            correct: 'hiding',
+            reward: 'final_location'
+        },
+        english: '<b>Revelation</b> — откровение, разоблачение.',
+        media: '<img src="assets/letter-close-up.png" style="width:100%; border-radius:12px;">',
+        choices: [{ text: 'Go to the Library', next: 'scene_library_climax' }]
     }
 
 };
