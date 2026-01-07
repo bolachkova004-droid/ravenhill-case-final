@@ -75,7 +75,6 @@ const scenes = {
     scene_box_note: {
         title: 'The Secret Note',
         text: 'The note says: "Do NOT trust the portraits. They are watching you."',
-        english: '<b>Folded</b> — сложенный.',
         media: '<img src="assets/box.png" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'Go to Gates with Key', next: 'scene1' }]
     },
@@ -114,16 +113,16 @@ const scenes = {
     },
     scene_study: {
         title: 'Sir Henry\'s Study',
-        text: 'The wall swings open. You enter a secret room filled with maps and a tape recorder.',
-        english: '<b>Tape recorder</b> — магнитофон.',
+        text: 'You enter a secret room. There is an old tape recorder and a massive mahogany desk.',
         media: '<img src="assets/study.png" style="width:100%; border-radius:12px;">',
         choices: [
-            { text: 'Play Elizabeth\'s diary', next: 'scene_diary' },
+            { text: 'Play the Diary Recording', next: 'scene_diary' },
+            { text: 'Examine the Desk', next: 'scene_study_desk' }, // ВОТ ЭТОТ ПЕРЕХОД НУЖЕН
             { text: 'Return to the Hall', next: 'scene2_hall' }
         ]
     },
     scene_diary: {
-        title: 'Elizabeth\'s Diary Recording',
+        title: 'Elizabeth\'s Diary',
         text: 'Elizabeth\'s voice fills the room. She sounds scared, but determined.',
         task: {
             id: 'task_diary_fear',
@@ -137,19 +136,18 @@ const scenes = {
         onEnter: () => sound.play('diary-voice'),
         choices: [{ text: 'Back to the Study', next: 'scene_study' }]
     },
-        // --- ПРОДОЛЖЕНИЕ ПОСЛЕ ДНЕВНИКА ---
     scene_study_desk: {
         title: 'The Mahogany Desk',
         text: 'On the desk, you find a letter. It _____ (write) by Elizabeth many years ago.',
         task: {
-            id: 'task_passive_voice',
+            id: 'task_passive',
             question: 'Choose the correct Passive Voice form:',
-            options: ['was written', 'was write', 'had written'],
-            correct: 'was written', // B1 level: Past Simple Passive
+            options: ['was written', 'was write'],
+            correct: 'was written',
             reward: 'basement_map'
         },
         english: '<b>Mahogany</b> — красное дерево.',
-        media: '<img src="assets/desk.png" style="width:100%; border-radius:12px;">', // Промт ниже
+        media: '<img src="assets/desk.png" style="width:100%; border-radius:12px;">',
         choices: [
             { text: 'Look for the trapdoor', next: 'scene_trapdoor', require: 'basement_map' },
             { text: 'Back to Study', next: 'scene_study' }
@@ -157,30 +155,27 @@ const scenes = {
     },
     scene_trapdoor: {
         title: 'The Trapdoor',
-        text: 'The map leads you to a rug. Under it, you find a heavy iron ring. A voice in your head says: "If I _____ (be) you, I would leave now."',
+        text: 'The map leads you to a rug. "If I _____ (be) you, I would leave now."',
         task: {
-            id: 'task_conditional',
-            question: 'Complete the Second Conditional (B1-B2):',
-            options: ['were', 'am', 'will be'],
-            correct: 'were', 
+            id: 'task_if',
+            question: 'Complete the Second Conditional:',
+            options: ['were', 'am'],
+            correct: 'were',
             reward: 'trapdoor_open'
         },
-        english: '<b>Trapdoor</b> — люк в полу.',
+        english: '<b>Trapdoor</b> — люк.',
         media: '<img src="assets/trapdoor.png" style="width:100%; border-radius:12px;">',
         choices: [
-            { text: 'Descend into the Basement', next: 'scene_basement', require: 'trapdoor_open' }
+            { text: 'Go into the Basement', next: 'scene_basement', require: 'trapdoor_open' }
         ]
     },
     scene_basement: {
         title: 'The Basement',
-        text: 'It is pitch black. You find the old photo Elizabeth mentioned. It shows Sir Henry with a strange man.',
-        english: '<b>Pitch black</b> — хоть глаз выколи (полная темнота).',
+        text: 'It is pitch black. You find the old photo Elizabeth mentioned.',
+        english: '<b>Pitch black</b> — полная темнота.',
         media: '<img src="assets/basement.png" style="width:100%; border-radius:12px;">',
-        choices: [
-            { text: 'Take the photo', next: 'scene1', reward: 'old_photo' }
-        ]
+        choices: [{ text: 'Take the photo and return to Gates', next: 'scene1', reward: 'old_photo' }]
     }
-
 };
 
 // --- 4. ФУНКЦИИ ОТРИСОВКИ ---
