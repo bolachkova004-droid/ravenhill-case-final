@@ -1,40 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravenhill · Episode I</title>
-    <!-- Подключаем стили -->
+    <title>Ravenhill: Interactive English Quest</title>
+    <!-- Подключение ваших оригинальных стилей -->
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем атмосферный шрифт (опционально) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="game-container">
+    <!-- ОСНОВНАЯ ОБОЛОЧКА ИГРЫ -->
+    <div id="game-window">
         
-        <!-- 1. Верхняя часть: Картинка или Видео на всю ширину -->
-        <div id="media-container">
-            <!-- Сюда JavaScript автоматически подставит изображение поместья -->
+        <!-- КОНТЕЙНЕР ДЛЯ ВИЗУАЛА (ФОТО/ВИДЕО) -->
+        <div id="visual-section">
+            <div id="media-container">
+                <!-- Сюда скрипт вставляет <img src="assets/gates.png"> -->
+            </div>
         </div>
 
-        <!-- 2. Средняя часть: Текстовый блок с отступами -->
-        <div class="content-box">
-            <!-- Сама история -->
-            <div id="scene-text" class="game-text"></div>
-            
-            <!-- Подсказки по английскому и условия заданий -->
-            <div id="english-note"></div>
+        <!-- ИНФОРМАЦИОННАЯ ПАНЕЛЬ -->
+        <div id="info-panel">
+            <!-- БЛОК СЮЖЕТНОГО ТЕКСТА -->
+            <div id="narrative-box">
+                <div id="scene-text" class="game-text">
+                    <!-- Сюда скрипт вставляет текст истории -->
+                </div>
+            </div>
+
+            <!-- БЛОК АНГЛИЙСКОГО ЯЗЫКА (Vocabulary/Hints) -->
+            <div id="language-section">
+                <div id="english-note">
+                    <!-- Сюда скрипт вставляет "Find out — выяснить" -->
+                </div>
+            </div>
         </div>
 
-        <!-- 3. Нижняя часть: Кнопки выбора (всегда под текстом) -->
-        <div id="choices-container">
-            <!-- Сюда JavaScript вставит кнопки ответов -->
+        <!-- ПАНЕЛЬ УПРАВЛЕНИЯ И ВЫБОРА -->
+        <div id="action-panel">
+            <div id="choices-container">
+                <!-- Сюда скрипт вставляет кнопки выбора -->
+            </div>
         </div>
 
     </div>
 
-    <!-- Подключаем логику в самом конце, чтобы всё прогрузилось -->
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТА (ВСЕГДА В КОНЦЕ) -->
     <script src="script.js"></script>
 
 </body>
