@@ -12,84 +12,72 @@ body, html {
 
 /* --- 2. СТАРТОВЫЙ ЭКРАН (Board2) --- */
 /* Полная фиксация на весь экран */
+/* Полный сброс для всего экрана */
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Запрещаем прокрутку на стартовом экране */
+}
+
+/* СТАРТОВЫЙ ЭКРАН */
 .start-screen {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    
+    /* ФОНОВАЯ КАРТИНКА (Ваш board2) */
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('assets/board2.webp') no-repeat center center;
+    background-size: cover;
+    
+    /* ВЫРАВНИВАНИЕ ВСЕГО ПО ЦЕНТРУ */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-    overflow: hidden;
-    background-color: #000; /* Черный фон на случай если картинка не грузится */
-}
-
-/* Картинка фона строго на весь экран */
-.start-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -2;
-}
-
-/* Затемнение поверх картинки */
-.start-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Немного уменьшим затемнение */
-    z-index: -1;
-}
-
-/* Центрированный контент */
-.start-inner {
-    position: relative;
-    z-index: 10;
     text-align: center;
-    width: 100%;
 }
 
+/* ЗАГОЛОВОК */
 .start-title {
-    font-size: clamp(3rem, 10vw, 6rem); /* Размер адаптируется под экран */
-    letter-spacing: 20px;
-    margin: 0;
+    font-size: 80px;
     color: #e67e22;
-    font-family: 'Cinzel', serif;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    margin: 0;
+    letter-spacing: 15px;
+    text-shadow: 2px 2px 20px rgba(0,0,0,0.9);
 }
 
+/* ПОДЗАГОЛОВОК */
 .start-subtitle {
-    font-size: 1.5rem;
-    letter-spacing: 5px;
-    margin-top: -10px;
+    font-size: 24px;
     color: #fff;
+    margin-top: 10px;
+    letter-spacing: 5px;
 }
 
+/* КНОПКА */
 .start-btn {
-    margin-top: 50px;
-    padding: 20px 60px;
-    background: rgba(230, 126, 34, 0.1);
+    margin-top: 40px;
+    padding: 15px 50px;
+    background: none;
     border: 2px solid #e67e22;
     color: #e67e22;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
+    font-size: 20px;
     cursor: pointer;
-    transition: 0.4s;
+    transition: 0.3s;
 }
 
 .start-btn:hover {
     background: #e67e22;
     color: #000;
-    box-shadow: 0 0 40px rgba(230, 126, 34, 0.6);
+}
+
+/* СКРЫВАЕМ КАРТИНКУ-ТЕГ (она нам больше не нужна в HTML) */
+.start-bg {
+    display: none;
 }
 
 /* --- 3. ИГРОВОЙ ИНТЕРФЕЙС --- */
