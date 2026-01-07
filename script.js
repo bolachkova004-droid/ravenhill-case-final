@@ -173,7 +173,49 @@ const scenes = {
         text: 'It is pitch black. You find the old photo Elizabeth mentioned.',
         media: '<img src="assets/basement.png" style="width:100%; border-radius:12px;">',
         choices: [{ text: 'Take photo and leave', next: 'scene1', reward: 'old_photo' }]
+    },
+        // --- ИЗМЕНЯЕМ СЦЕНУ ПОДВАЛА ---
+    scene_basement: {
+        title: 'The Basement',
+        text: 'It is pitch black. You find the old photo. Suddenly, you hear a heavy bolt slide shut. Someone has <span class="vocab-word">trapped</span> you!',
+        english: '<b>Trapped</b> — поймал в ловушку, запер.',
+        media: '<img src="assets/basement.png" style="width:100%; border-radius:12px;">',
+        choices: [{ text: 'Who is there?', next: 'scene_caretaker' }]
+    },
+
+    scene_caretaker: {
+        title: 'The Caretaker',
+        text: 'An old man with a lantern looks through the bars. "You shouldn\'t have come," he mumbles. "I wish you _____ (not/find) that photo."',
+        task: {
+            id: 'task_wish',
+            question: 'Complete the sentence (B2 - Regrets about the past):',
+            options: ['hadn\'t found', 'didn\'t find', 'haven\'t found'],
+            correct: 'hadn\'t found', // B2 level: Wish + Past Perfect
+            reward: 'caretaker_key'
+        },
+        english: '<b>Lantern</b> — фонарь.',
+        media: '<img src="assets/caretaker.png" style="width:100%; border-radius:12px;">', // Промт ниже
+        choices: [
+            { text: 'Persuade him to let you out', next: 'scene_escape', require: 'caretaker_key' }
+        ]
+    },
+
+    scene_escape: {
+        title: 'The Escape',
+        text: 'The Caretaker sighs and opens the door. "Run, detective. Before Sir Henry finds you. Go to the <span class="vocab-word">attic</span>."',
+        english: '<b>Attic</b> — чердак.',
+        media: '<img src="assets/hall-intro.mp4" style="width:100%; border-radius:12px;">', // Можно использовать видео холла
+        choices: [{ text: 'Go to the Attic', next: 'scene_attic' }]
+    },
+    
+    scene_attic: {
+        title: 'The Attic',
+        text: 'The attic is filled with covered furniture. You feel that the mystery is almost <span class="vocab-word">solved</span>.',
+        english: '<b>Solved</b> — разгадана.',
+        media: '<img src="assets/attic.png" style="width:100%; border-radius:12px;">',
+        choices: [{ text: 'To be continued...', next: 'scene1' }]
     }
+
 };
 
 // --- 4. ФУНКЦИИ ОТРИСОВКИ ---
@@ -194,15 +236,17 @@ function renderScene(id) {
         if (engEl) engEl.innerHTML = data.english || '';
 
         // ИНВЕНТАРЬ
-        const itemNames = {
+      const itemNames = {
     'silver_key': '🗝️ Silver Key',
     'access_hint': '📜 Radio Code',
     'housekeeper_trust': '🤝 Trust',
     'secret_code': '🔢 Code',
     'diary_clue': '📓 Diary Clue',
-    'basement_map': '🗺️ Basement Map', // Новое
-    'old_photo': '🖼️ Elizabeth\'s Photo' // Новое
+    'basement_map': '🗺️ Basement Map',
+    'old_photo': '🖼️ Photo',
+    'caretaker_key': '🔑 Cell Key' // Новое
 };
+
 
         const scoreEl = document.getElementById('score-display');
         const invEl = document.getElementById('inventory-display');
