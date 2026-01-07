@@ -193,23 +193,15 @@ function renderScene(sceneId) {
     const textElement = document.getElementById('scene-text');
     const choicesContainer = document.getElementById('choices-container');
     const mediaContainer = document.getElementById('media-container');
-    const progressBar = document.getElementById('progress-bar');
     const englishElement = document.getElementById('english-note');
 
-    // Обновляем прогресс
-    if (progressBar) {
-        const total = Object.keys(scenes).length;
-        const current = Object.keys(scenes).indexOf(sceneId) + 1;
-        progressBar.style.width = (current / total * 100) + "%";
-    }
-
-    // Отрисовка медиа (картинка или видео)
+    // Отрисовка медиа
     if (mediaContainer) mediaContainer.innerHTML = scene.media || '';
 
     // Отрисовка английской заметки
     if (englishElement) englishElement.innerHTML = scene.english || '';
 
-    // Анимация текста
+    // Плавное появление текста
     if (textElement) {
         textElement.classList.remove('visible');
         setTimeout(() => {
@@ -219,22 +211,22 @@ function renderScene(sceneId) {
     }
 
     // Отрисовка кнопок
-    choicesContainer.innerHTML = '';
-    
-    // Если есть задание (Task), рисуем кнопки задания
-    if (scene.task && !inventory.has(scene.task.reward)) {
-        renderTask(scene.task, choicesContainer, sceneId);
-    } else {
-        // Иначе рисуем обычные переходы
-        scene.choices.forEach(choice => {
-            if (!choice.require || inventory.has(choice.require)) {
-                const btn = document.createElement('button');
-                btn.innerText = choice.text;
-                btn.className = 'choice-btn';
-                btn.onclick = () => renderScene(choice.next);
-                choicesContainer.appendChild(btn);
-            }
-        });
+    if (choicesContainer) {
+        choicesContainer.innerHTML = '';
+        
+        if (scene.task && !inventory.has(scene.task.reward)) {
+            renderTask(scene.task, choicesContainer, sceneId);
+        } else {
+            scene.choices.forEach(choice => {
+                if (!choice.require || inventory.has(choice.require)) {
+                    const btn = document.createElement('button');
+                    btn.innerText = choice.text;
+                    btn.className = 'choice-btn';
+                    btn.onclick = () => renderScene(choice.next);
+                    choicesContainer.appendChild(btn);
+                }
+            });
+        }
     }
 }
 
