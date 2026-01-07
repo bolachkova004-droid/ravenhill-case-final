@@ -4,26 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ravenhill · Episode I</title>
+    <!-- Подключаем стили -->
     <link rel="stylesheet" href="style.css">
+    <!-- Подключаем атмосферный шрифт (опционально) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="game-container">
-        <!-- Место для картинок и видео -->
-        <div id="media-container"></div>
-
-        <!-- Текст истории -->
-        <div id="scene-text" class="game-text"></div>
         
-        <!-- Перевод слов -->
-        <div id="english-note"></div>
+        <!-- 1. Верхняя часть: Картинка или Видео на всю ширину -->
+        <div id="media-container">
+            <!-- Сюда JavaScript автоматически подставит изображение поместья -->
+        </div>
 
-        <!-- Кнопки -->
-        <div id="choices-container"></div>
+        <!-- 2. Средняя часть: Текстовый блок с отступами -->
+        <div class="content-box">
+            <!-- Сама история -->
+            <div id="scene-text" class="game-text"></div>
+            
+            <!-- Подсказки по английскому и условия заданий -->
+            <div id="english-note"></div>
+        </div>
+
+        <!-- 3. Нижняя часть: Кнопки выбора (всегда под текстом) -->
+        <div id="choices-container">
+            <!-- Сюда JavaScript вставит кнопки ответов -->
+        </div>
+
     </div>
 
+    <!-- Подключаем логику в самом конце, чтобы всё прогрузилось -->
     <script src="script.js"></script>
+
 </body>
 </html>
-
-
