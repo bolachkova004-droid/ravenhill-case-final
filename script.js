@@ -2,7 +2,6 @@
 let inventory = new Set();
 let score = 0;
 
-// Красивые названия для инвентаря
 const itemNames = {
     'access_hint': '📜 Radio Hint',
     'silver_key': '🗝️ Silver Key',
@@ -10,9 +9,11 @@ const itemNames = {
     'secret_code': '🔢 Secret Code',
     'diary_clue': '📓 Elizabeth\'s Diary',
     'basement_map': '🗺️ Basement Map',
-    'caretaker_key': '🔑 Cell Key'
+    'caretaker_key': '🔑 Cell Key',
+    'trapdoor_open': '🔓 Trapdoor Unlocked'
 };
 
+// Функция обновления статуса (проверяет наличие элементов)
 function updateStatus() {
     const scoreDisplay = document.getElementById('score-display');
     const invDisplay = document.getElementById('inventory-display');
@@ -20,7 +21,6 @@ function updateStatus() {
     if (scoreDisplay) scoreDisplay.innerText = `Score: ${score} points`;
     
     if (invDisplay) {
-        // Превращаем Set в список красивых названий через запятую
         const displayItems = Array.from(inventory)
             .map(id => itemNames[id] || id)
             .join(', ');
@@ -28,19 +28,27 @@ function updateStatus() {
     }
 }
 
-// --- 2. ЛОГИКА СТАРТОВОГО ЭКРАНА ---
-const startBtn = document.getElementById('start-btn');
-if (startBtn) {
-    startBtn.onclick = () => {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('game-content').style.display = 'block';
-        const music = document.getElementById('bgMusic');
-        if (music) music.play().catch(e => console.log("Music play blocked by browser"));
-        renderScene('scene1');
-    };
+// --- 2. ЛОГИКА СТАРТА ---
+function startGame() {
+    const startScreen = document.getElementById('start-screen');
+    const gameContent = document.getElementById('game-container'); // Исправлено на ваш ID из HTML
+    
+    if (startScreen) startScreen.style.display = 'none';
+    if (gameContent) gameContent.style.display = 'block';
+    
+    const music = document.getElementById('bgMusic');
+    if (music) music.play().catch(e => console.log("Music play blocked"));
+    
+    renderScene('scene1');
 }
 
-// --- 3. ОБЪЕКТ СЦЕН ---
+// Привязываем функцию к кнопке (если она есть в HTML)
+const startBtn = document.querySelector('.start-btn');
+if (startBtn) {
+    startBtn.onclick = startGame;
+}
+
+// --- 3. ОБЪЕКТ СЦЕН (Ваш полный сюжет) ---
 const scenes = {
     scene1: {
         title: 'Episode I · The Summons',
@@ -63,7 +71,7 @@ const scenes = {
     scene_radio: {
         title: 'Radio Message',
         text: 'Static noise... then a voice: "Detective, check the garden! There is a box hidden near the roses."',
-        onEnter: () => document.getElementById('radioSound').play(),
+        onEnter: () => { const s = document.getElementById('radioSound'); if(s) s.play(); },
         media: '<video src="assets/radio-scene.mp4" autoplay loop muted class="clue-img"></video>',
         choices: [{ text: 'Go to the Garden', next: 'scene_garden' }]
     },
@@ -135,7 +143,7 @@ const scenes = {
     scene_diary: {
         title: 'Elizabeth\'s Diary',
         text: 'Elizabeth\'s voice fills the room. She sounds scared, but determined.',
-        onEnter: () => document.getElementById('diary-voice').play(),
+        onEnter: () => { const s = document.getElementById('diary-voice'); if(s) s.play(); },
         media: '<img src="assets/diary-mystical.png" class="clue-img">',
         choices: [{ text: 'Back to the Study', next: 'scene_study' }]
     },
@@ -168,6 +176,7 @@ const scenes = {
     scene_basement: {
         title: 'The Basement',
         text: 'Suddenly, the door slams shut! You find a photo of Sir Henry.',
+        media: '<img src="assets/basement.png" class="clue-img">',
         choices: [{ text: 'Who is there?', next: 'scene_caretaker' }]
     },
     scene_caretaker: {
@@ -195,42 +204,52 @@ function renderScene(sceneId) {
     const scene = scenes[sceneId];
     if (!scene) return;
 
-    // Обновляем текст и медиа в ваших ID
-    document.getElementById('scene-title').innerText = scene.title;
-    document.getElementById('scene-text').innerHTML = scene.text;
-    document.getElementById('clue-media').innerHTML = scene.media || '';
-    document.getElementById('mini-english-content').innerHTML = scene.english || 'No new vocabulary here.';
+    // Обновляем элементы по ID из нашего HTML
+    const titleEl = document.getElementById('scene-title');
+    const textEl = document.getElementById('scene-text');
+    const mediaBox = document.getElementById('media-container');
+    const dictBox = document.getElementById('dictionary-display');
+
+    if (titleEl) titleEl.innerText = scene.title;
+    if (textEl) textEl.innerHTML = scene.text;
+    if (mediaBox) mediaBox.innerHTML = scene.media || '';
+    if (dictBox) dictBox.innerHTML = scene.english || 'No new vocabulary here.';
     
     if (scene.onEnter) scene.onEnter();
     updateStatus();
 
-    const choicesContainer = document.querySelector('.choices');
-    choicesContainer.innerHTML = '';
+    const choicesContainer = document.getElementById('choices-container');
+    if (choicesContainer) {
+        choicesContainer.innerHTML = '';
 
-    // Логика ЗАДАНИЙ
-    if (scene.task && !inventory.has(scene.task.reward)) {
-        renderTask(scene.task, choicesContainer, sceneId);
-    } else {
-        // Логика ОБЫЧНЫХ ВЫБОРОВ
-        scene.choices.forEach(choice => {
-            if (!choice.require || inventory.has(choice.require)) {
-                const btn = document.createElement('button');
-                btn.innerText = choice.text;
-                btn.className = 'choice-btn';
-                btn.onclick = () => {
-                    document.getElementById('uiClick').play();
-                    renderScene(choice.next);
-                };
-                choicesContainer.appendChild(btn);
-            }
-        });
+        // Логика ЗАДАНИЙ
+        if (scene.task && !inventory.has(scene.task.reward)) {
+            renderTask(scene.task, choicesContainer, sceneId);
+        } else {
+            // Логика ВЫБОРОВ
+            scene.choices.forEach(choice => {
+                if (!choice.require || inventory.has(choice.require)) {
+                    const btn = document.createElement('button');
+                    btn.innerText = choice.text;
+                    btn.className = 'choice-btn';
+                    btn.onclick = () => {
+                        const s = document.getElementById('uiClick');
+                        if(s) s.play();
+                        renderScene(choice.next);
+                    };
+                    choicesContainer.appendChild(btn);
+                }
+            });
+        }
     }
 }
 
 function renderTask(task, container, sceneId) {
     const qText = document.createElement('p');
     qText.className = 'task-question';
-    qText.innerHTML = `<b>TASK:</b> ${task.question}`;
+    qText.style.width = '100%';
+    qText.style.textAlign = 'center';
+    qText.innerHTML = `<b class="vocab-word">TASK:</b> ${task.question}`;
     container.appendChild(qText);
 
     task.options.forEach(option => {
