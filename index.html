@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravenhill: The Case | Episode I</title>
+    <title>Ravenhill: The Case</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,50 +14,32 @@
         <button class="start-btn" onclick="startGame()">Enter the Manor</button>
     </div>
 
-    <!-- Основной игровой контент -->
-    <div id="game-container" class="game-content">
-        <header class="header">
-            <h1>Ravenhill: The Case</h1>
-        </header>
+    <!-- Игровое окно (скрыто в начале) -->
+    <div id="game-container" class="game-content" style="display: none;">
+        <h2 id="scene-title">Loading...</h2>
+        <div id="media-container" class="clue-media"></div>
+        <div id="scene-text"></div>
+        <div id="choices-container" class="choices"></div>
 
-        <main class="scene">
-            <div class="case-file">Case File #01</div>
-            <h2 id="scene-title">Loading...</h2>
-            
-            <div class="clue-media" id="media-container">
-                <!-- Сюда вставляются фото/видео через JS -->
-            </div>
-
-            <div id="scene-text" class="game-text">
-                <!-- Сюда вставляется текст сцены -->
-            </div>
-
-            <div id="choices-container" class="choices">
-                <!-- Сюда вставляются кнопки действий/задач -->
-            </div>
-        </main>
-
-        <!-- Нижние панели -->
         <div class="panels-container">
-            <section class="mini-english">
+            <div class="mini-english">
                 <h3>🔍 Mini-English</h3>
-                <div id="dictionary-display">Words will appear here...</div>
-            </section>
-
-            <section class="status">
-                <h3>💼 Status & Inventory</h3>
+                <div id="dictionary-display"></div>
+            </div>
+            <div class="status">
+                <h3>💼 Status</h3>
                 <div id="score-display">Score: 0</div>
-                <div id="inventory-display">Inventory: Empty</div>
-            </section>
+                <div id="inventory-display">Inventory: empty</div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <!-- Аудио-файлы из вашей папки assets -->
-<audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
-<audio id="uiClick" src="assets/click1.wav"></audio>
-<audio id="radioSound" src="assets/radio-message.wav"></audio>
-<audio id="diary-voice" src="assets/diary-voice.mp3"></audio>
+    <!-- Звуки (проверьте, что они есть в assets) -->
+    <audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
+    <audio id="uiClick" src="assets/click1.wav"></audio>
+    <audio id="radioSound" src="assets/radio-message.wav"></audio>
+    <audio id="diary-voice" src="assets/diary-voice.mp3"></audio>
 
+    <script src="script.js"></script>
 </body>
 </html>
