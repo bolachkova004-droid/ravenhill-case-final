@@ -26,16 +26,16 @@ body, html {
     top: 0; left: 0;
     width: 100vw; height: 100vh;
     z-index: 9999;
-    /* ИСПРАВЛЕННЫЙ ПУТЬ: ../ выходит из папки css */
+    /* Убрали две точки, теперь картинка найдется */
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), 
-                url('../assets/board2.webp') no-repeat center center;
+                url('assets/board2.webp') no-repeat center center;
     background-size: cover;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.8s ease;
 }
+
 
 .start-title {
     font-family: 'Cinzel', serif;
