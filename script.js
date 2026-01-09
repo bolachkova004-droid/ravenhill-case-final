@@ -28,16 +28,19 @@ function startGame() {
     const startScreen = document.getElementById('start-screen');
     const gameContent = document.getElementById('game-container');
     
+    // Прячем заставку
     if (startScreen) startScreen.style.display = 'none';
+    // Показываем игру
     if (gameContent) gameContent.style.display = 'block';
     
-    // Запуск фоновой музыки
+    // Включаем музыку
     const music = document.getElementById('bgMusic');
-    if (music) music.play().catch(e => console.log("Music play blocked"));
+    if (music) music.play().catch(e => console.log("Music blocked"));
     
-    renderScene('scene1');
+    renderScene('scene1'); // Запускаем первую сцену
 }
 
+   
 // Привязка кнопки старта
 const startBtn = document.querySelector('.start-btn');
 if (startBtn) { startBtn.onclick = startGame; }
