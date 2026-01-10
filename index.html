@@ -109,183 +109,133 @@ function updateStatus() {
             renderScene('scene1');
         }
 
-     const scenes = {
-    // --- ГЛАВА 1: ПРИБЫТИЕ ---
+   const scenes = {
+    // --- УРОВЕНЬ 1: ЗАПОМИНАНИЕ (Knowledge) ---
     scene1: {
-        title: 'The Gates',
-        text: 'You stand before the gates of Ravenhill Manor. They are locked. You need to <b>find out</b> how to enter.',
+        title: 'The Iron Gates',
+        text: 'You stand before the gates. A small plaque says: "Private Property. Do not enter without permission." You need to <b>find out</b> who lives here.',
         task: { 
-            question: 'What does "find out" mean?', 
-            options: ['To discover information', 'To close the gate'], 
-            correct: 'To discover information', 
+            question: 'Bloom: Remember. What is the closest synonym for "permission"?', 
+            options: ['Authorization', 'Prohibition', 'Investigation'], 
+            correct: 'Authorization', 
             reward: 'access_hint' 
         },
-        english: '<b>Find out</b> — выяснить, разузнать.',
+        english: '<b>Find out</b> (v): to discover facts.',
         media: '<img src="assets/gates.png" class="clue-img">',
-        choices: [
-            { text: 'Search the Garden', next: 'scene_garden' },
-            { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
-            { text: 'Enter the Hall', next: 'scene2_hall', require: 'silver_key' }
-        ]
+        choices: [{ text: 'Search the Garden', next: 'scene_garden' }]
     },
-    scene_radio: {
-        title: 'Radio Message',
-        text: 'Static noise... then a voice: "Detective, check the garden! There is a box hidden near the roses."',
-        onEnter: () => playSound('radioSound'),
-        media: '<video src="assets/radio-scene.mp4" autoplay loop muted class="clue-img"></video>',
-        choices: [{ text: 'Go to the Garden', next: 'scene_garden' }]
-    },
+
+    // --- УРОВЕНЬ 2: ПОНИМАНИЕ (Comprehension) ---
     scene_garden: {
-        title: 'The Silent Garden',
-        text: 'Among the withered roses, you see a <span class="vocab-word">concealed</span> wooden box.',
-        english: '<b>Concealed</b> — скрытый, спрятанный.',
+        title: 'The Withered Garden',
+        text: 'Among the roses, you find a hidden box. A note inside says: "The key was hidden by the one who serves the tea."',
+        task: { 
+            question: 'Bloom: Understand. Who is the person mentioned in the note?', 
+            options: ['The Housekeeper', 'The Detective', 'The Gatekeeper'], 
+            correct: 'The Housekeeper', 
+            reward: 'garden_clue' 
+        },
         media: '<img src="assets/garden.png" class="clue-img">',
         choices: [{ text: 'Open the box', next: 'scene_box_task' }]
     },
+
     scene_box_task: {
-        title: 'The Mysterious Box',
-        text: 'The box is locked. "The detective decided to _____ into the room."',
+        title: 'The Puzzle Box',
+        text: 'To open the box, complete the sentence: "If I ____ (have) the key, I would open this manor immediately."',
         task: { 
-            question: 'Which phrasal verb means "to enter"?', 
-            options: ['Go out', 'Go in'], 
-            correct: 'Go in', 
+            question: 'Bloom: Apply. Second Conditional (unreal present):', 
+            options: ['had', 'have', 'would have'], 
+            correct: 'had', 
             reward: 'silver_key' 
         },
-        media: '<img src="assets/box.png" class="clue-img">',
-        choices: [{ text: 'Go to Gates with Key', next: 'scene1', require: 'silver_key' }]
+        choices: [{ text: 'Go to the Main Hall', next: 'scene2_hall', require: 'silver_key' }]
     },
 
-    // --- ГЛАВА 2: ОСОБНЯК И УЛИКИ ---
-    scene2_hall: {
-        title: 'The Grand Hall',
-        text: 'The manor is vast. You must gather clues to find Sir Henry. Where will you investigate?',
-        media: '<video src="assets/hall-intro.mp4" autoplay loop muted class="clue-img"></video>',
-        choices: [
-            { text: 'Go to the Library', next: 'scene_library' },
-            { text: 'Check the Kitchen', next: 'scene_kitchen' },
-            { text: 'Talk to the Housekeeper', next: 'scene_housekeeper' },
-            { text: 'Examine the Portrait', next: 'scene_portrait_secret', require: 'housekeeper_trust' }
-        ]
-    },
-    scene_library: {
-        title: 'The Library',
-        text: 'Dusty books line the walls. "If Sir Henry ____ (be) more careful, he wouldn\'t be missing now."',
-        task: { 
-            question: 'Mixed Conditional (B2):', 
-            options: ['had been', 'was', 'would be'], 
-            correct: 'had been', 
-            reward: 'library_clue' 
-        },
-        media: '<img src="assets/library.png" class="clue-img">',
-        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
-    },
+    // --- УРОВЕНЬ 3: ПРИМЕНЕНИЕ (Application) ---
     scene_kitchen: {
-        title: 'The Kitchen',
-        text: 'A silver tray ____ (leave) on the counter. It smells of bitter almonds—poison.',
+        title: 'The Cold Kitchen',
+        text: 'You find a recipe on the counter. "The poison ____ (mix) with the tea to silence the witness."',
         task: { 
-            question: 'Passive Voice (B2):', 
-            options: ['must have been left', 'has left'], 
-            correct: 'must have been left', 
+            question: 'Bloom: Apply. Passive Voice in the past:', 
+            options: ['was mixed', 'is mixed', 'mixed'], 
+            correct: 'was mixed', 
             reward: 'poison_clue' 
         },
         media: '<img src="assets/kitchen.png" class="clue-img">',
-        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+        choices: [{ text: 'Investigate the Library', next: 'scene_library' }]
     },
-    scene_housekeeper: {
-        title: 'The Housekeeper',
-        text: '"You shouldn\'t be here! Sir Henry _____ (watch) everyone for years!"',
+
+    // --- УРОВЕНЬ 4: АНАЛИЗ (Analysis) ---
+    scene_library: {
+        title: 'The Silent Library',
+        text: 'You find two letters. Letter A says Sir Henry was afraid. Letter B says he was planning a trip. "He ____ (must/be) terrified if he left his luggage behind," you deduce.',
         task: { 
-            question: 'Present Perfect Continuous:', 
-            options: ['has been watching', 'is watching'], 
-            correct: 'has been watching', 
+            question: 'Bloom: Analyze. Which modal verb shows a strong logical deduction?', 
+            options: ['must have been', 'could be', 'should have been'], 
+            correct: 'must have been', 
+            reward: 'library_clue' 
+        },
+        media: '<img src="assets/library.png" class="clue-img">',
+        choices: [{ text: 'Talk to the Housekeeper', next: 'scene_housekeeper' }]
+    },
+
+    // --- УРОВЕНЬ 5: ОЦЕНКА (Evaluation) ---
+    scene_housekeeper: {
+        title: 'The Housekeeper\'s Fear',
+        text: '"Detective, I\'ve been working here for 20 years. Sir Henry has been acting strange recently."',
+        task: { 
+            question: 'Bloom: Evaluate. Based on her tone, is the housekeeper:', 
+            options: ['Anxious and suspicious', 'Calm and indifferent', 'Happy and excited'], 
+            correct: 'Anxious and suspicious', 
             reward: 'housekeeper_trust' 
         },
         media: '<img src="assets/housekeeper.png" class="clue-img">',
-        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+        choices: [{ text: 'Ask about the Secret Cabinet', next: 'scene_portrait_secret', require: 'housekeeper_trust' }]
     },
 
-    // --- ГЛАВА 3: ТАЙНЫЙ КАБИНЕТ ---
-    scene_portrait_secret: {
-        title: 'The Hidden Keypad',
-        text: 'Behind the portrait, you find a keypad. "He must ____ (be) rich to afford this."',
+    // --- УРОВЕНЬ 6: СИНТЕЗ (Synthesis / Listening) ---
+    scene_diary: {
+        title: 'Elizabeth\'s Recording',
+        text: 'Listen to the diary. Combine the clues: The poison in the kitchen + The fear in the library.',
+        onEnter: () => playSound('diary-voice'),
         task: { 
-            question: 'Modal Deduction (B2):', 
-            options: ['have been', 'had been'], 
-            correct: 'have been', 
-            reward: 'secret_code' 
-        },
-        media: '<img src="assets/sir-henry.jpg" class="clue-img">',
-        choices: [{ text: 'Enter the Secret Study', next: 'scene_study', require: 'secret_code' }]
-    },
-    scene_study: {
-        title: 'Sir Henry\'s Study',
-        text: 'A hidden room with a mahogany desk. You see Elizabeth\'s diary.',
-        media: '<img src="assets/study.png" class="clue-img">',
-        choices: [{ text: 'Examine the Desk', next: 'scene_study_desk' }]
-    },
-    scene_study_desk: {
-        title: 'The Desk',
-        text: 'On the desk lies Elizabeth\'s diary. It seems she ____ (write) in it recently.',
-        task: { 
-            question: 'Past Perfect:', 
-            options: ['had written', 'wrote'], 
-            correct: 'had written', 
+            question: 'Bloom: Create/Synthesize. What is the most likely conclusion?', 
+            options: ['Elizabeth is hiding because she is in danger', 'Sir Henry went on a vacation', 'The housekeeper stole the jewels'], 
+            correct: 'Elizabeth is hiding because she is in danger', 
             reward: 'diary_unlocked' 
         },
-        media: '<img src="assets/desk.png" class="clue-img">',
-        choices: [{ text: 'Listen to the Diary', next: 'scene_diary', require: 'diary_unlocked' }]
-    },
-    scene_diary: {
-        title: 'Elizabeth\'s Diary',
-        text: 'Voice: "The Caretaker is watching... Find the trapdoor!"',
-        onEnter: () => playSound('diary-voice'),
         media: '<img src="assets/diary-mystical.png" class="clue-img">',
-        choices: [{ text: 'Find the Trapdoor', next: 'scene_trapdoor', require: 'library_clue' }]
+        choices: [{ text: 'Find the Trapdoor', next: 'scene_trapdoor', require: 'diary_unlocked' }]
     },
 
-    // --- ГЛАВА 4: ПОДВАЛ И ФИНАЛ ---
-    scene_trapdoor: {
-        title: 'The Trapdoor',
-        text: 'A hidden passage leads down into the darkness.',
-        media: '<img src="assets/trapdoor.png" class="clue-img">',
-        choices: [{ text: 'Go down to the Basement', next: 'scene_basement' }]
-    },
-    scene_basement: {
-        title: 'The Basement',
-        text: 'Suddenly, the door slams shut! You are trapped.',
-        media: '<img src="assets/basement.png" class="clue-img">',
-        choices: [{ text: 'Who is there?', next: 'scene_caretaker' }]
-    },
+    // --- ФИНАЛ: ПОДВАЛ И ЭЛИЗАБЕТ ---
     scene_caretaker: {
-        title: 'The Caretaker',
-        text: '"I wish you ____ (not/find) this place," says the old man.',
+        title: 'The Final Confrontation',
+        text: 'The Caretaker blocks your path. "I wish you ____ (stay) away from our family business."',
         task: { 
-            question: 'B2 Regrets (Wish):', 
-            options: ['hadn\'t found', 'didn\'t find'], 
-            correct: 'hadn\'t found', 
+            question: 'Bloom: Apply. Wish about the past (regret):', 
+            options: ['had stayed', 'stayed', 'would stay'], 
+            correct: 'had stayed', 
             reward: 'caretaker_trust' 
         },
         media: '<img src="assets/caretaker.png" class="clue-img">',
-        choices: [{ text: 'Ask about Elizabeth', next: 'scene_attic', require: 'caretaker_trust' }]
+        choices: [{ text: 'Approach Elizabeth', next: 'scene_elizabeth_reveal', require: 'caretaker_trust' }]
     },
-    scene_attic: {
-        title: 'The Attic',
-        text: 'You climb to the top. In the moonlight, you see a figure.',
-        onEnter: () => playSound('footsteps'),
-        media: '<img src="assets/attic.png" class="clue-img">',
-        choices: [{ text: 'Approach Elizabeth', next: 'scene_elizabeth_reveal' }]
-    },
+
     scene_elizabeth_reveal: {
-        title: 'Elizabeth',
-        text: '"Detective? You found me. But we aren\'t safe... We must leave. Now."',
+        title: 'The Truth',
+        text: 'Elizabeth whispers: "If you hadn\'t come, I ____ (not/survive) this night."',
+        task: { 
+            question: 'Bloom: Analyze. Third Conditional (impossible past):', 
+            options: ['wouldn\'t have survived', 'didn\'t survive', 'won\'t survive'], 
+            correct: 'wouldn\'t have survived', 
+            reward: 'final_clue' 
+        },
         media: '<img src="assets/elizabeth.png" class="clue-img">',
-        choices: [{ text: 'FINISH EPISODE I', next: 'scene_final' }]
+        choices: [{ text: 'Finish Episode I', next: 'scene_final' }]
     },
-    scene_final: {
-        title: 'To Be Continued',
-        text: 'Episode II: The Shadow of Ravenhill — Coming Soon.',
-        choices: [{ text: 'Restart Adventure', next: 'scene1' }]
-    }
+
+    scene_final: { title: 'Episode I Complete', text: 'You have analyzed the clues and saved Elizabeth. The adventure continues...', choices: [{ text: 'Restart', next: 'scene1' }] }
 };
 
         function renderScene(sceneId) {
