@@ -189,30 +189,44 @@
 
 
         function renderScene(sceneId) {
-            const scene = scenes[sceneId];
-            if (!scene) return;
-            document.getElementById('scene-title').innerText = scene.title;
-            document.getElementById('scene-text').innerHTML = scene.text;
-            document.getElementById('media-container').innerHTML = scene.media || '';
-            document.getElementById('dictionary-display').innerHTML = scene.english || 'Keep searching...';
-            if (scene.onEnter) scene.onEnter();
-            updateStatus();
-            const choiceBox = document.getElementById('choices-container');
-            choiceBox.innerHTML = '';
-            if (scene.task && !inventory.has(scene.task.reward)) {
-                renderTask(scene.task, choiceBox, sceneId);
-            } else {
-                scene.choices.forEach(c => {
-                    if (!c.require || inventory.has(c.require)) {
-                        const b = document.createElement('button');
-                        b.className = 'choice-btn';
-                        b.innerText = c.text;
-                        b.onclick = () => { playSound('uiClick'); renderScene(c.next); };
-                        choiceBox.appendChild(b);
-                    }
-                });
+    const scene = scenes[sceneId];
+    if (!scene) return;
+
+    document.getElementById('scene-title').innerText = scene.title;
+    document.getElementById('scene-text').innerHTML = scene.text;
+    document.getElementById('media-container').innerHTML = scene.media || '';
+    document.getElementById('dictionary-display').innerHTML = scene.english || '';
+    
+    // Запуск звука сцены, если он есть
+    if (scene.onEnter) scene.onEnter();
+    updateStatus();
+
+    const choiceBox = document.getElementById('choices-container');
+    choiceBox.innerHTML = '';
+
+    // Если есть задание и оно не решено
+    if (scene.task && !inventory.has(scene.task.reward)) {
+        renderTask(scene.task, choiceBox, sceneId);
+    } else {
+        // Обычные кнопки
+        scene.choices.forEach(c => {
+            // Проверка: есть ли у нас нужный предмет для этой кнопки
+            if (!c.require || inventory.has(c.require)) {
+                const b = document.createElement('button');
+                b.className = 'choice-btn';
+                b.innerText = c.text;
+                
+                // ЗВУК ТЕПЕРЬ ТУТ ДЛЯ ВСЕХ КНОПОК
+                b.onclick = () => { 
+                    playSound('uiClick'); // Звук клика всегда первым
+                    renderScene(c.next); 
+                };
+                choiceBox.appendChild(b);
             }
-        }
+        });
+    }
+}
+
 
         function renderTask(task, container, sceneId) {
             const p = document.createElement('p');
