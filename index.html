@@ -53,14 +53,36 @@
     <audio id="diary-voice" src="assets/diary-voice.mp3" preload="auto"></audio>
 
     <script>
-        let inventory = new Set();
-        let score = 0;
+        // --- 1. ИНИЦИАЛИЗАЦИЯ И СОСТОЯНИЕ ---
+let inventory = new Set();
+let score = 0;
 
-        const itemNames = {
-            'access_hint': '📜 Radio Hint', 'silver_key': '🗝️ Silver Key',
-            'housekeeper_trust': '🤝 Housekeeper Trust', 'secret_code': '🔢 Secret Code',
-            'library_clue': '📖 Library Note', 'poison_clue': '🧪 Kitchen Clue'
-        };
+// Полный список названий предметов для Episode I
+const itemNames = {
+    'access_hint': '📜 Radio Hint',
+    'silver_key': '🗝️ Silver Key',
+    'housekeeper_trust': '🤝 Housekeeper Trust',
+    'library_clue': '📖 Library Note',
+    'poison_clue': '🧪 Poison Residue',
+    'secret_code': '🔢 Secret Code',
+    'diary_unlocked': '📓 Elizabeth\'s Diary',
+    'caretaker_trust': '🔑 Caretaker\'s Trust'
+};
+
+function updateStatus() {
+    const scoreDisplay = document.getElementById('score-display');
+    const invDisplay = document.getElementById('inventory-display');
+    
+    if (scoreDisplay) scoreDisplay.innerText = `Score: ${score} points`;
+    
+    if (invDisplay) {
+        // Превращаем Set в список красивых названий через запятую
+        const displayItems = Array.from(inventory)
+            .map(id => itemNames[id] || id)
+            .join(', ');
+        invDisplay.innerText = `Inventory: ${displayItems || 'empty'}`;
+    }
+}
 
         function playSound(id) {
             const audio = document.getElementById(id);
