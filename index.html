@@ -65,15 +65,15 @@
             'trapdoor_open': '🔓 Trapdoor Unlocked'
         };
 
-      function playSound(id) {
+     function playSound(id) {
     const audio = document.getElementById(id);
     if (audio) {
-        // Сброс и мгновенный запуск
-        audio.pause();
-        audio.currentTime = 0;
-        audio.play().catch(e => {});
+        audio.pause(); 
+        audio.currentTime = 0; // Сброс в начало
+        audio.play().catch(e => console.log("Audio blocked:", id));
     }
 }
+
 
         function updateStatus() {
             document.getElementById('score-display').innerText = `Score: ${score}`;
