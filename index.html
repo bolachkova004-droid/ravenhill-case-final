@@ -76,23 +76,32 @@
         }
 
         function startGame() {
-            console.log("Button clicked!");
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            playSound('bgMusic');
-            function startGame() {
+    console.log("Game starting...");
+    const startScreen = document.getElementById('start-screen');
+    const gameContainer = document.getElementById('game-container');
+    
+    // Настройка громкости
     const bgMusic = document.getElementById('bgMusic');
     const diaryVoice = document.getElementById('diary-voice');
-    
+    const uiClick = document.getElementById('uiClick');
+
     if (bgMusic) {
-        bgMusic.volume = 0.2; // Музыка на 20% громкости (тише)
-        bgMusic.play();
+        bgMusic.volume = 0.15; // Сделали еще чуть тише, чтобы не перебивала голос
+        bgMusic.play().catch(e => console.log("Music blocked"));
     }
     if (diaryVoice) {
-        diaryVoice.volume = 1.0; // Голос на 100% (максимально громко)
+        diaryVoice.volume = 1.0; // Максимальная громкость для улик
     }
-            renderScene('scene1');
-        }
+    if (uiClick) {
+        uiClick.volume = 0.5; // Клики на средней громкости
+    }
+
+    if (startScreen) startScreen.style.display = 'none';
+    if (gameContainer) gameContainer.style.display = 'block';
+    
+    renderScene('scene1');
+}
+
 
         const scenes = {
             scene1: {
