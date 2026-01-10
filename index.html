@@ -64,10 +64,14 @@
             'trapdoor_open': '🔓 Trapdoor Unlocked'
         };
 
-        function playSound(id) {
-            const audio = document.getElementById(id);
-            if (audio) { audio.currentTime = 0; audio.play().catch(e => console.log("Sound blocked")); }
-        }
+       function playSound(id) {
+    const audio = document.getElementById(id);
+    if (audio) {
+        const soundClone = audio.cloneNode(); // Создает клон для мгновенного запуска
+        soundClone.volume = audio.volume;
+        soundClone.play().catch(e => console.log("Playback failed"));
+    }
+}
 
         function updateStatus() {
             document.getElementById('score-display').innerText = `Score: ${score}`;
