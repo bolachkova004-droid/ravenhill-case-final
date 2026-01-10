@@ -47,7 +47,8 @@
 
     <!-- 3. ЗВУКИ -->
     <audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
-    <audio id="uiClick" src="assets/click1.wav"></audio>
+    <audio id="uiClick" src="assets/click1.wav" preload="auto"></audio>
+
     <audio id="radioSound" src="assets/radio-message.wav"></audio>
     <audio id="footsteps" src="assets/footsteps.mp3"></audio>
     <audio id="diary-voice" src="assets/diary-voice.mp3"></audio>
@@ -64,12 +65,13 @@
             'trapdoor_open': '🔓 Trapdoor Unlocked'
         };
 
-       function playSound(id) {
+      function playSound(id) {
     const audio = document.getElementById(id);
     if (audio) {
-        const soundClone = audio.cloneNode(); // Создает клон для мгновенного запуска
-        soundClone.volume = audio.volume;
-        soundClone.play().catch(e => console.log("Playback failed"));
+        // Сброс и мгновенный запуск
+        audio.pause();
+        audio.currentTime = 0;
+        audio.play().catch(e => {});
     }
 }
 
