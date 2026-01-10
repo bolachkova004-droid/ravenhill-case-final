@@ -80,6 +80,17 @@
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             playSound('bgMusic');
+            function startGame() {
+    const bgMusic = document.getElementById('bgMusic');
+    const diaryVoice = document.getElementById('diary-voice');
+    
+    if (bgMusic) {
+        bgMusic.volume = 0.2; // Музыка на 20% громкости (тише)
+        bgMusic.play();
+    }
+    if (diaryVoice) {
+        diaryVoice.volume = 1.0; // Голос на 100% (максимально громко)
+    }
             renderScene('scene1');
         }
 
