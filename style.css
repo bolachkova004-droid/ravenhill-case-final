@@ -118,11 +118,13 @@ body, html {
 
 /* Кнопки выбора */
 .choices {
+    margin-bottom: 60px; /* Увеличили промежуток до панелей снизу */
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
     justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
+
 
 .choice-btn {
     background: rgba(199, 175, 139, 0.05);
