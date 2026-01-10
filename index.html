@@ -110,18 +110,22 @@
 
 
        const scenes = {
-    scene1: {
-        title: 'Episode I · The Summons',
-        text: 'You stand before the gates of Ravenhill. They are locked. You need to <b>find out</b> how to enter.',
-        task: { question: 'What does "find out" mean?', options: ['To discover information', 'To close the gate'], correct: 'To discover information', reward: 'access_hint' },
-        english: '<b>Find out</b> — выяснить, разузнать.',
-        media: '<img src="assets/gates.png" class="clue-img">',
-        choices: [
-            { text: 'Search the Garden', next: 'scene_garden' },
-            { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
-            { text: 'Enter the Hall', next: 'scene2_hall', require: 'silver_key' }
-        ]
+   scene1: {
+    title: 'Episode I · The Summons',
+    text: 'You stand before the gates of Ravenhill. They are locked. You need to <b>find out</b> how to enter.',
+    task: { 
+        question: 'What does "find out" mean?', 
+        options: ['To discover information', 'To close the gate'], 
+        correct: 'To discover information', 
+        reward: 'access_hint' 
     },
+    choices: [
+        { text: 'Search the Garden', next: 'scene_garden' },
+        { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
+        { text: 'Enter the Hall', next: 'scene2_hall', require: 'silver_key' }
+    ]
+},
+
     scene2_hall: {
         title: 'The Grand Hall',
         text: 'The manor is vast. You see a nervous housekeeper and several doors.',
