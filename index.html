@@ -3,57 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravenhill: The Case | Episode I</title>
+    <title>Ravenhill: The Case</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Дополнительные правки дизайна прямо здесь для надежности */
-        .choices { margin-bottom: 80px !important; gap: 20px; display: flex; justify-content: center; flex-wrap: wrap; }
-        .task-question { width: 100%; text-align: center; font-weight: bold; color: #c7af8b; margin-bottom: 20px; }
-        .clue-img { max-width: 100%; border-radius: 5px; border: 1px solid #333; }
+        /* Исправление отступов и верстки медиа */
+        .choices { margin: 40px 0 80px 0 !important; gap: 15px; display: flex; justify-content: center; flex-wrap: wrap; width: 100%; }
+        .clue-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 20px auto; background: #111; }
+        .task-question { width: 100%; text-align: center; font-family: 'Cinzel', serif; color: #c7af8b; font-size: 1.1rem; margin-bottom: 20px; }
+        #game-container { display: none; max-width: 900px; margin: 0 auto; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- 1. СТАРТОВЫЙ ЭКРАН -->
+    <!-- Стартовый экран -->
     <div id="start-screen" class="start-screen">
         <h1 class="start-title">RAVENHILL</h1>
         <p class="start-subtitle">THE CASE: EPISODE I</p>
-        <!-- Прямой вызов функции -->
         <button class="start-btn" onclick="startGame()">Enter the Manor</button>
     </div>
 
-    <!-- 2. ИГРОВОЕ ОКНО -->
-    <div id="game-container" class="game-content" style="display: none; max-width: 1000px; margin: 0 auto; padding: 20px;">
-        <h2 id="scene-title" style="font-family: 'Cinzel', serif; color: #c7af8b;"></h2>
-        <div id="media-container" style="margin-bottom: 20px;"></div>
-        <div id="scene-text" style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 30px;"></div>
-        
-        <!-- Кнопки ответов -->
-        <div id="choices-container" class="choices"></div>
+    <!-- Игровое окно -->
+    <div id="game-container">
+        <div class="scene">
+            <div class="case-file">Case File #01</div>
+            <h2 id="scene-title"></h2>
+            <div id="media-container"></div>
+            <div id="scene-text"></div>
+            <div id="choices-container" class="choices"></div>
+        </div>
 
-        <!-- Панели -->
         <div class="panels-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="mini-english" style="background: rgba(20,20,20,0.8); padding: 20px; border-top: 2px solid #c7af8b;">
-                <h3 style="color: #c7af8b; font-family: 'Cinzel';">🔍 Mini-English</h3>
+            <div class="mini-english" style="background: rgba(15,15,15,0.9); padding: 20px; border-top: 3px solid #c7af8b;">
+                <h3 style="color:#c7af8b; font-family:'Cinzel';">🔍 Mini-English</h3>
                 <div id="dictionary-display"></div>
             </div>
-            <div class="status" style="background: rgba(20,20,20,0.8); padding: 20px; border-top: 2px solid #c7af8b;">
-                <h3 style="color: #c7af8b; font-family: 'Cinzel';">💼 Status</h3>
+            <div class="status" style="background: rgba(15,15,15,0.9); padding: 20px; border-top: 3px solid #c7af8b;">
+                <h3 style="color:#c7af8b; font-family:'Cinzel';">💼 Status</h3>
                 <div id="score-display">Score: 0</div>
                 <div id="inventory-display">Inventory: empty</div>
             </div>
         </div>
     </div>
 
-    <!-- 3. ЗВУКИ -->
-    <audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
+    <!-- Звуки -->
+    <audio id="bgMusic" loop src="assets/mystery-loop.mp3" preload="auto"></audio>
     <audio id="uiClick" src="assets/click1.wav" preload="auto"></audio>
+    <audio id="radioSound" src="assets/radio-message.wav" preload="auto"></audio>
+    <audio id="footsteps" src="assets/footsteps.mp3" preload="auto"></audio>
+    <audio id="diary-voice" src="assets/diary-voice.mp3" preload="auto"></audio>
 
-    <audio id="radioSound" src="assets/radio-message.wav"></audio>
-    <audio id="footsteps" src="assets/footsteps.mp3"></audio>
-    <audio id="diary-voice" src="assets/diary-voice.mp3"></audio>
-
-    <!-- 4. СКРИПТ (ВШИТ ВНУТРЬ ДЛЯ ГАРАНТИИ РАБОТЫ) -->
     <script>
         let inventory = new Set();
         let score = 0;
@@ -61,19 +59,17 @@
         const itemNames = {
             'access_hint': '📜 Radio Hint', 'silver_key': '🗝️ Silver Key',
             'housekeeper_trust': '🤝 Housekeeper Trust', 'secret_code': '🔢 Secret Code',
-            'basement_map': '🗺️ Basement Map', 'caretaker_key': '🔑 Cell Key',
-            'trapdoor_open': '🔓 Trapdoor Unlocked'
+            'library_clue': '📖 Library Note', 'poison_clue': '🧪 Kitchen Clue'
         };
 
-     function playSound(id) {
-    const audio = document.getElementById(id);
-    if (audio) {
-        audio.pause(); 
-        audio.currentTime = 0; // Сброс в начало
-        audio.play().catch(e => console.log("Audio blocked:", id));
-    }
-}
-
+        function playSound(id) {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio blocked"));
+            }
+        }
 
         function updateStatus() {
             document.getElementById('score-display').innerText = `Score: ${score}`;
@@ -82,171 +78,157 @@
         }
 
         function startGame() {
-    console.log("Game starting...");
-    const startScreen = document.getElementById('start-screen');
-    const gameContainer = document.getElementById('game-container');
-    
-    // Настройка громкости
-    const bgMusic = document.getElementById('bgMusic');
-    const diaryVoice = document.getElementById('diary-voice');
-    const uiClick = document.getElementById('uiClick');
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            
+            const music = document.getElementById('bgMusic');
+            if (music) { music.volume = 0.15; music.play(); }
+            
+            renderScene('scene1');
+        }
 
-    if (bgMusic) {
-        bgMusic.volume = 0.15; // Сделали еще чуть тише, чтобы не перебивала голос
-        bgMusic.play().catch(e => console.log("Music blocked"));
-    }
-    if (diaryVoice) {
-        diaryVoice.volume = 1.0; // Максимальная громкость для улик
-    }
-    if (uiClick) {
-        uiClick.volume = 0.5; // Клики на средней громкости
-    }
-
-    if (startScreen) startScreen.style.display = 'none';
-    if (gameContainer) gameContainer.style.display = 'block';
-    
-    renderScene('scene1');
-}
-
-
-       const scenes = {
-   scene1: {
-    title: 'Episode I · The Summons',
-    text: 'You stand before the gates of Ravenhill. They are locked. You need to <b>find out</b> how to enter.',
-    task: { 
-        question: 'What does "find out" mean?', 
-        options: ['To discover information', 'To close the gate'], 
-        correct: 'To discover information', 
-        reward: 'access_hint' 
-    },
-    choices: [
-        { text: 'Search the Garden', next: 'scene_garden' },
-        { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
-        { text: 'Enter the Hall', next: 'scene2_hall', require: 'silver_key' }
-    ]
-},
-
-    scene2_hall: {
-        title: 'The Grand Hall',
-        text: 'The manor is vast. You see a nervous housekeeper and several doors.',
-        media: '<video src="assets/hall-intro.mp4" autoplay loop muted class="clue-img" style="width:100%"></video>',
-        choices: [
-            { text: 'Talk to Housekeeper', next: 'scene_housekeeper' },
-            { text: 'Go to the Library', next: 'scene_library' },
-            { text: 'Investigate the Kitchen', next: 'scene_kitchen' }
-        ]
-    },
-    scene_library: {
-        title: 'The Great Library',
-        text: 'Dusty books line the walls. "If Sir Henry ____ (be) more careful, he wouldn\'t be missing now," you mutter.',
-        media: '<img src="assets/library.png" class="clue-img">', // Убедитесь, что есть фото
-        task: { 
-            question: 'Complete the Mixed Conditional:', 
-            options: ['had been', 'was', 'would be'], 
-            correct: 'had been', 
-            reward: 'library_clue' 
-        },
-        english: '<b>Mutter</b> — бормотать.',
-        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
-    },
-    scene_kitchen: {
-        title: 'The Kitchen',
-        text: 'The dinner was interrupted. A silver tray ____ (leave) on the counter.',
-        media: '<img src="assets/kitchen.png" class="clue-img">',
-        task: { 
-            question: 'Choose the correct Passive Voice:', 
-            options: ['must have been left', 'has left', 'was leaving'], 
-            correct: 'must have been left', 
-            reward: 'poison_clue' 
-        },
-        english: '<b>Tray</b> — поднос.',
-        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
-    },
-    scene_housekeeper: {
-        title: 'The Housekeeper',
-        text: '"Sir Henry _____ (watch) everyone for years!"',
-        task: { question: 'Correct tense:', options: ['has been watching', 'is watching'], correct: 'has been watching', reward: 'housekeeper_trust' },
-        media: '<img src="assets/housekeeper.png" class="clue-img">',
-        choices: [
-            { text: 'Ask about the Portraits', next: 'scene_portrait_secret', require: 'housekeeper_trust' },
-            { text: 'Back to Hall', next: 'scene2_hall' }
-        ]
-    },
-    // ... далее идут ваши сцены scene_portrait_secret, scene_study и т.д.
-    scene_portrait_secret: {
-        title: 'The Hidden Keypad',
-        text: 'Behind the portrait, you find a keypad. "Only the one who understands the past can enter."',
-        task: { question: 'Which is correct?', options: ['He must have been rich.', 'He must be rich yesterday.'], correct: 'He must have been rich.', reward: 'secret_code' },
-        media: '<img src="assets/sir-henry.jpg" class="clue-img">',
-        choices: [{ text: 'Open the Secret Study', next: 'scene_study', require: 'secret_code' }]
-    },
-    scene_study: {
-        title: 'Sir Henry\'s Study',
-        text: 'A secret room with a desk and an old diary.',
-        media: '<img src="assets/study.png" class="clue-img">',
-        choices: [
-            { text: 'Listen to the Diary', next: 'scene_diary' },
-            { text: 'Examine the Desk', next: 'scene_study_desk' }
-        ]
-    }
-};
-
+        const scenes = {
+            scene1: {
+                title: 'Episode I · The Summons',
+                text: 'You stand before the gates of Ravenhill. They are locked. You need to <b>find out</b> how to enter.',
+                task: { 
+                    question: 'What does "find out" mean?', 
+                    options: ['To discover information', 'To close the gate'], 
+                    correct: 'To discover information', 
+                    reward: 'access_hint' 
+                },
+                english: '<b>Find out</b> — выяснить, разузнать.',
+                media: '<img src="assets/gates.png" class="clue-img">',
+                choices: [
+                    { text: 'Search the Garden', next: 'scene_garden' },
+                    { text: 'Use Radio Hint', next: 'scene_radio', require: 'access_hint' },
+                    { text: 'Enter the Hall', next: 'scene2_hall', require: 'silver_key' }
+                ]
+            },
+            scene_radio: {
+                title: 'Radio Message',
+                text: 'Static noise... then a voice: "Detective, check the garden! There is a box near the roses."',
+                onEnter: () => playSound('radioSound'),
+                media: '<video src="assets/radio-scene.mp4" autoplay loop muted class="clue-img"></video>',
+                choices: [{ text: 'Go to the Garden', next: 'scene_garden' }]
+            },
+            scene_garden: {
+                title: 'The Silent Garden',
+                text: 'Among the withered roses, you see a concealed wooden box.',
+                english: '<b>Concealed</b> — скрытый.',
+                media: '<img src="assets/garden.png" class="clue-img">',
+                choices: [{ text: 'Open the box', next: 'scene_box_task' }]
+            },
+            scene_box_task: {
+                title: 'The Mysterious Box',
+                text: 'The box is locked. "The detective decided to _____ into the room."',
+                task: { 
+                    question: 'Which phrasal verb means "to enter"?', 
+                    options: ['Go out', 'Go in'], 
+                    correct: 'Go in', 
+                    reward: 'silver_key' 
+                },
+                media: '<img src="assets/box.png" class="clue-img">',
+                choices: [{ text: 'Back to Gates with Key', next: 'scene1', require: 'silver_key' }]
+            },
+            scene2_hall: {
+                title: 'The Grand Hall',
+                text: 'The manor is vast and cold. A housekeeper stands by the stairs.',
+                onEnter: () => playSound('footsteps'),
+                media: '<video src="assets/hall-intro.mp4" autoplay loop muted class="clue-img"></video>',
+                choices: [
+                    { text: 'Talk to Housekeeper', next: 'scene_housekeeper' },
+                    { text: 'Go to the Library', next: 'scene_library' },
+                    { text: 'Check the Kitchen', next: 'scene_kitchen' }
+                ]
+            },
+            scene_library: {
+                title: 'The Library',
+                text: '"If Sir Henry ____ (be) more careful, he wouldn\'t be missing now."',
+                task: { question: 'B2 Conditional:', options: ['had been', 'was', 'would be'], correct: 'had been', reward: 'library_clue' },
+                media: '<img src="assets/library.png" class="clue-img">',
+                choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+            },
+            scene_kitchen: {
+                title: 'The Kitchen',
+                text: 'A silver tray ____ (leave) on the counter by someone in a hurry.',
+                task: { question: 'Passive Voice:', options: ['must have been left', 'has left'], correct: 'must have been left', reward: 'poison_clue' },
+                media: '<img src="assets/kitchen.png" class="clue-img">',
+                choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+            },
+            scene_housekeeper: {
+                title: 'The Housekeeper',
+                text: '"Sir Henry _____ (watch) everyone for years!"',
+                task: { question: 'Choose tense:', options: ['has been watching', 'is watching'], correct: 'has been watching', reward: 'housekeeper_trust' },
+                media: '<img src="assets/housekeeper.png" class="clue-img">',
+                choices: [{ text: 'Ask about the Secret Cabin', next: 'scene_portrait_secret', require: 'housekeeper_trust' }]
+            },
+            scene_portrait_secret: {
+                title: 'The Secret Cabinet',
+                text: 'Behind a painting, you find a keypad. "He must ____ (be) rich to afford this."',
+                task: { question: 'Modal Deduction:', options: ['have been', 'had been'], correct: 'have been', reward: 'secret_code' },
+                media: '<img src="assets/sir-henry.jpg" class="clue-img">',
+                choices: [{ text: 'Open the Study', next: 'scene_study', require: 'secret_code' }]
+            },
+            scene_study: {
+                title: 'The Study',
+                text: 'The truth is close. You hear Elizabeth\'s voice...',
+                onEnter: () => playSound('diary-voice'),
+                media: '<img src="assets/study.png" class="clue-img">',
+                choices: [{ text: 'Finish Episode I', next: 'scene_final' }]
+            },
+            scene_final: { title: 'To Be Continued', text: 'You found the secret study, but the mystery deepens.', choices: [{ text: 'Restart', next: 'scene1' }] }
+        };
 
         function renderScene(sceneId) {
-    const scene = scenes[sceneId];
-    if (!scene) return;
+            const scene = scenes[sceneId];
+            if (!scene) return;
 
-    document.getElementById('scene-title').innerText = scene.title;
-    document.getElementById('scene-text').innerHTML = scene.text;
-    document.getElementById('media-container').innerHTML = scene.media || '';
-    document.getElementById('dictionary-display').innerHTML = scene.english || '';
-    
-    // Запуск звука сцены, если он есть
-    if (scene.onEnter) scene.onEnter();
-    updateStatus();
+            document.getElementById('scene-title').innerText = scene.title;
+            document.getElementById('scene-text').innerHTML = scene.text;
+            document.getElementById('media-container').innerHTML = scene.media || '';
+            document.getElementById('dictionary-display').innerHTML = scene.english || 'No new words here.';
+            
+            if (scene.onEnter) scene.onEnter();
+            updateStatus();
 
-    const choiceBox = document.getElementById('choices-container');
-    choiceBox.innerHTML = '';
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
 
-    // Если есть задание и оно не решено
-    if (scene.task && !inventory.has(scene.task.reward)) {
-        renderTask(scene.task, choiceBox, sceneId);
-    } else {
-        // Обычные кнопки
-        scene.choices.forEach(c => {
-            // Проверка: есть ли у нас нужный предмет для этой кнопки
-            if (!c.require || inventory.has(c.require)) {
-                const b = document.createElement('button');
-                b.className = 'choice-btn';
-                b.innerText = c.text;
-                
-                // ЗВУК ТЕПЕРЬ ТУТ ДЛЯ ВСЕХ КНОПОК
-                b.onclick = () => { 
-                    playSound('uiClick'); // Звук клика всегда первым
-                    renderScene(c.next); 
-                };
-                choiceBox.appendChild(b);
+            if (scene.task && !inventory.has(scene.task.reward)) {
+                renderTask(scene.task, choicesContainer, sceneId);
+            } else {
+                scene.choices.forEach(choice => {
+                    if (!choice.require || inventory.has(choice.require)) {
+                        const btn = document.createElement('button');
+                        btn.innerText = choice.text;
+                        btn.className = 'choice-btn';
+                        btn.onclick = () => { playSound('uiClick'); renderScene(choice.next); };
+                        choicesContainer.appendChild(btn);
+                    }
+                });
             }
-        });
-    }
-}
-
+        }
 
         function renderTask(task, container, sceneId) {
-            const p = document.createElement('p');
-            p.className = 'task-question';
-            p.innerHTML = `TASK: ${task.question}`;
-            container.appendChild(p);
+            const q = document.createElement('p');
+            q.className = 'task-question';
+            q.innerHTML = `TASK: ${task.question}`;
+            container.appendChild(q);
+
             task.options.forEach(opt => {
-                const b = document.createElement('button');
-                b.className = 'choice-btn';
-                b.innerText = opt;
-                b.onclick = () => {
-                    if (opt === task.correct) { 
-                        score += 10; inventory.add(task.reward); renderScene(sceneId); 
-                    } else { alert("Wrong! Check your grammar."); }
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.className = 'choice-btn';
+                btn.onclick = () => {
+                    playSound('uiClick');
+                    if (opt === task.correct) {
+                        inventory.add(task.reward);
+                        score += 10;
+                        renderScene(sceneId);
+                    } else { alert("Wrong answer!"); }
                 };
-                container.appendChild(b);
+                container.appendChild(btn);
             });
         }
     </script>
