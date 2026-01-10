@@ -72,21 +72,26 @@ function updateStatus() {
     }
 }
 
+// 1. Убедимся, что функции объявлены просто и понятно
 function startGame() {
-    document.getElementById('start-screen').style.display = 'none';
-    document.getElementById('game-container').style.display = 'block';
+    console.log("Game starting..."); // Это поможет нам увидеть нажатие в консоли
     
-    // Запускаем музыку при первом клике
-    playSound('bgMusic');
-    playSound('footsteps'); // Звук шагов при входе
+    const startScreen = document.getElementById('start-screen');
+    const gameContainer = document.getElementById('game-container');
+    
+    if (startScreen) startScreen.style.display = 'none';
+    if (gameContainer) gameContainer.style.display = 'block';
+    
+    // Запуск звуков
+    const bgMusic = document.getElementById('bgMusic');
+    if (bgMusic) {
+        bgMusic.play().catch(e => console.log("Music blocked by browser. It will play after the first interaction."));
+    }
     
     renderScene('scene1');
 }
 
-window.onload = function() {
-    const btn = document.querySelector('.start-btn');
-    if (btn) btn.onclick = startGame;
-};
+// 2. Остальной код (updateStatus, renderScene и т.д.) идет следом...
 
 const scenes = {
     scene1: {
