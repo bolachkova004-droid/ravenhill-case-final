@@ -161,3 +161,33 @@ body, html {
 }
 
 .vocab-word { color: var(--gold); font-weight: bold; border-bottom: 1px dashed var(--gold); cursor: help; }
+/* --- Плавное появление сцен --- */
+#game-container {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Свечение для кнопок заданий --- */
+.task-btn {
+    border-color: #c7af8b !important; /* Наше викторианское золото */
+    box-shadow: 0 0 15px rgba(199, 175, 139, 0.2);
+}
+
+/* --- Ограничение высоты картинок, чтобы всё влезало на экран --- */
+.clue-img {
+    max-height: 40vh; /* Картинка не займет больше 40% высоты окна */
+    width: auto;
+    margin: 0 auto 20px;
+    display: block;
+    border: 2px solid rgba(199, 175, 139, 0.3);
+}
+
+/* --- Мобильная адаптация --- */
+@media (max-width: 600px) {
+    .panels-container { grid-template-columns: 1fr; }
+    .start-title { font-size: 3rem; letter-spacing: 10px; }
+}
