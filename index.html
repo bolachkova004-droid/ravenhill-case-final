@@ -59,15 +59,24 @@ let score = 0;
 
 // Полный список названий предметов для Episode I
 const itemNames = {
-    'access_hint': '📜 Radio Hint',
+    'gate_clue_1': '🔍 Gate Analysis',
+    'gate_clue_2': '⚙️ Lock Mechanism',
+    'access_hint': '📜 Entry Permit',
+    'garden_clue': '🌹 Garden Note',
+    'box_1': '🔓 Box Layer 1',
+    'box_2': '🔓 Box Layer 2',
     'silver_key': '🗝️ Silver Key',
     'housekeeper_trust': '🤝 Housekeeper Trust',
-    'library_clue': '📖 Library Note',
+    'lib_1': '📖 Library Note',
+    'lib_2': '📜 Secret Cipher',
+    'library_clue': '🗺️ Secret Map',
     'poison_clue': '🧪 Poison Residue',
-    'secret_code': '🔢 Secret Code',
+    'secret_code': '🔢 Cabinet Code',
     'diary_unlocked': '📓 Elizabeth\'s Diary',
-    'caretaker_trust': '🔑 Caretaker\'s Trust'
+    'caretaker_trust': '🔑 Cell Key',
+    'final_clue': '✨ The Truth'
 };
+
 
 function updateStatus() {
     const scoreDisplay = document.getElementById('score-display');
@@ -111,150 +120,156 @@ function updateStatus() {
 
    const scenes = {
     // --- ГЛАВА 1: ПРИБЫТИЕ ---
+   const scenes = {
+    // --- ГЛАВА 1: ВОРОТА (3 этапа) ---
     scene1: {
         title: 'The Iron Gates',
-        text: 'The manor looms ahead. To proceed, you must analyze the situation.',
-        task: { 
-            question: 'Task 1: What is the synonym of "investigate"?', 
-            options: ['Look into', 'Look for', 'Look after'], 
-            correct: 'Look into', 
-            reward: 'gate_clue_1' 
-        },
+        text: 'The manor looms ahead. You stand before the massive gates.',
+        task: { question: 'What is the synonym of "investigate"?', options: ['Look into', 'Look for'], correct: 'Look into', reward: 'gate_clue_1' },
         media: '<img src="assets/gates.png" class="clue-img">',
-        choices: [{ text: 'Continue Investigation', next: 'scene1_task2', require: 'gate_clue_1' }]
+        choices: [{ text: 'Examine the Lock', next: 'scene1_task2', require: 'gate_clue_1' }]
     },
     scene1_task2: {
         title: 'The Gate Mechanism',
         text: 'The lock is rusted. "It ____ (not/open) for years," you observe.',
-        task: { 
-            question: 'Task 2: Choose the correct Passive Voice:', 
-            options: ['hasn\'t been opened', 'wasn\'t open', 'isn\'t opened'], 
-            correct: 'hasn\'t been opened', 
-            reward: 'gate_clue_2' 
-        },
-        choices: [{ text: 'Examine the Plaque', next: 'scene1_task3', require: 'gate_clue_2' }]
+        task: { question: 'Choose Passive Voice:', options: ['hasn\'t been opened', 'wasn\'t open'], correct: 'hasn\'t been opened', reward: 'gate_clue_2' },
+        media: '<img src="assets/gates.png" class="clue-img">', // Повтор для фокуса
+        choices: [{ text: 'Check the Plaque', next: 'scene1_task3', require: 'gate_clue_2' }]
     },
     scene1_task3: {
         title: 'The Private Plaque',
-        text: 'The plaque says: "Visitors ____ (request) to ring the bell."',
-        task: { 
-            question: 'Task 3: Formal Passive Structure:', 
-            options: ['are requested', 'request', 'were requested'], 
-            correct: 'are requested', 
-            reward: 'access_hint' 
-        },
+        text: 'The plaque says: "Visitors are requested to ring the bell."',
+        task: { question: 'Meaning of "are requested":', options: ['Asked formally', 'Forced'], correct: 'Asked formally', reward: 'access_hint' },
+        media: '<img src="assets/gates.png" class="clue-img">',
+        // ТЕПЕРЬ КНОПКА СРАБОТАЕТ:
         choices: [{ text: 'Go to the Garden', next: 'scene_garden', require: 'access_hint' }]
     },
 
     // --- ГЛАВА 2: САД И КОРОБКА ---
+    scene_garden: {
+        title: 'The Withered Garden',
+        text: 'Among the roses, you find a hidden box. A note says: "The key was hidden by the housekeeper."',
+        task: { question: 'Who has the key?', options: ['The Housekeeper', 'The Caretaker'], correct: 'The Housekeeper', reward: 'garden_clue' },
+        media: '<img src="assets/garden.png" class="clue-img">',
+        choices: [{ text: 'Open the Box', next: 'scene_box_task', require: 'garden_clue' }]
+    },
     scene_box_task: {
-        title: 'The Puzzle Box',
-        text: 'The box has three mechanical layers. Layer 1: "If I ____ (be) you, I wouldn\'t touch that."',
-        task: { 
-            question: 'Layer 1: Conditional Type 2:', 
-            options: ['were', 'am', 'would be'], 
-            correct: 'were', 
-            reward: 'box_1' 
-        },
+        title: 'The Puzzle Box - Layer 1',
+        text: 'Layer 1: "If I ____ (be) you, I wouldn\'t touch that."',
+        task: { question: 'Second Conditional:', options: ['were', 'am'], correct: 'were', reward: 'box_1' },
         media: '<img src="assets/box.png" class="clue-img">',
-        choices: [{ text: 'Unlock Layer 2', next: 'scene_box_task2', require: 'box_1' }]
+        choices: [{ text: 'Next Layer', next: 'scene_box_task2', require: 'box_1' }]
     },
     scene_box_task2: {
         title: 'The Puzzle Box - Layer 2',
-        text: 'Layer 2: "The key ____ (hide) here by Elizabeth herself."',
-        task: { 
-            question: 'Layer 2: Passive Voice Deduction:', 
-            options: ['must have been hidden', 'was hiding', 'has hidden'], 
-            correct: 'must have been hidden', 
-            reward: 'box_2' 
-        },
-        choices: [{ text: 'Unlock Final Layer', next: 'scene_box_task3', require: 'box_2' }]
+        text: 'Layer 2: "The key ____ (hide) here by Elizabeth."',
+        task: { question: 'Passive Deduction:', options: ['must have been hidden', 'was hiding'], correct: 'must have been hidden', reward: 'box_2' },
+        media: '<img src="assets/box.png" class="clue-img">',
+        choices: [{ text: 'Final Layer', next: 'scene_box_task3', require: 'box_2' }]
     },
     scene_box_task3: {
-        title: 'The Puzzle Box - Final Layer',
+        title: 'The Puzzle Box - Final',
         text: 'Layer 3: "I wish I ____ (know) the truth earlier."',
-        task: { 
-            question: 'Layer 3: Wish about the past:', 
-            options: ['had known', 'knew', 'would know'], 
-            correct: 'had known', 
-            reward: 'silver_key' 
-        },
-        choices: [{ text: 'Enter the Main Hall', next: 'scene2_hall', require: 'silver_key' }]
+        task: { question: 'Wish (Past):', options: ['had known', 'knew'], correct: 'had known', reward: 'silver_key' },
+        media: '<img src="assets/box.png" class="clue-img">',
+        choices: [{ text: 'Enter the Manor', next: 'scene2_hall', require: 'silver_key' }]
     },
 
-    // --- ГЛАВА 3: БИБЛИОТЕКА (Анализ текстов) ---
+    // --- ГЛАВА 3: ХОЛЛ И КУХНЯ/БИБЛИОТЕКА ---
+    scene2_hall: {
+        title: 'The Grand Hall',
+        text: 'Where will you investigate first?',
+        media: '<video src="assets/hall-intro.mp4" autoplay loop muted class="clue-img"></video>',
+        choices: [
+            { text: 'Go to Library', next: 'scene_library' },
+            { text: 'Check Kitchen', next: 'scene_kitchen' },
+            { text: 'Talk to Housekeeper', next: 'scene_housekeeper' },
+            { text: 'Examine Portrait', next: 'scene_portrait_secret', require: 'housekeeper_trust' }
+        ]
+    },
     scene_library: {
         title: 'The Library',
-        text: 'You find an old diary entry. Task 1: Identify the mood.',
-        task: { 
-            question: 'Elizabeth writes: "I am dreading his return." She is:', 
-            options: ['Anxious/Fearful', 'Excited/Happy', 'Bored'], 
-            correct: 'Anxious/Fearful', 
-            reward: 'lib_1' 
-        },
+        text: 'You find an old diary entry. It feels anxious.',
+        task: { question: 'Is the tone:', options: ['Fearful', 'Bored'], correct: 'Fearful', reward: 'lib_1' },
         media: '<img src="assets/library.png" class="clue-img">',
-        choices: [{ text: 'Read more', next: 'scene_library_2', require: 'lib_1' }]
+        choices: [{ text: 'Read Note', next: 'scene_library_2', require: 'lib_1' }]
     },
     scene_library_2: {
         title: 'The Library - Secret Note',
-        text: '"He ____ (must/work) for the enemy," the note suggests.',
-        task: { 
-            question: 'Task 2: Modal of deduction (Present Continuous):', 
-            options: ['must be working', 'must work', 'must have worked'], 
-            correct: 'must be working', 
-            reward: 'lib_2' 
-        },
-        choices: [{ text: 'Analyze the map', next: 'scene_library_3', require: 'lib_2' }]
+        text: '"He ____ (must/work) for the enemy," it suggests.',
+        task: { question: 'Modal (Present):', options: ['must be working', 'must work'], correct: 'must be working', reward: 'lib_2' },
+        media: '<img src="assets/library.png" class="clue-img">',
+        choices: [{ text: 'Final Clue', next: 'scene_library_3', require: 'lib_2' }]
     },
     scene_library_3: {
         title: 'The Library - Hidden Map',
-        text: 'The map shows a trapdoor. "It ____ (locate) under the mahogany desk."',
-        task: { 
-            question: 'Task 3: Present Passive:', 
-            options: ['is located', 'locates', 'was located'], 
-            correct: 'is located', 
-            reward: 'library_clue' 
-        },
-        choices: [{ text: 'Return to Hall', next: 'scene2_hall', require: 'library_clue' }]
+        text: 'The map shows a trapdoor. "It ____ (locate) under the desk."',
+        task: { question: 'Present Passive:', options: ['is located', 'locates'], correct: 'is located', reward: 'library_clue' },
+        media: '<img src="assets/library.png" class="clue-img">',
+        choices: [{ text: 'Back to Hall', next: 'scene2_hall', require: 'library_clue' }]
     },
 
-    // --- ФИНАЛ: ЧЕРДАК И ЭЛИЗАБЕТ ---
+    // --- ФИНАЛЬНЫЕ СЦЕНЫ (ПОДВАЛ, ЧЕРДАК) ---
+    scene_housekeeper: {
+        title: 'The Housekeeper',
+        text: '"Sir Henry ____ (watch) us for years!"',
+        task: { question: 'Tense:', options: ['has been watching', 'is watching'], correct: 'has been watching', reward: 'housekeeper_trust' },
+        media: '<img src="assets/housekeeper.png" class="clue-img">',
+        choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+    },
+    scene_portrait_secret: {
+        title: 'The Hidden Keypad',
+        text: '"He must ____ (be) rich to afford this."',
+        task: { question: 'Modal (Past):', options: ['have been', 'had been'], correct: 'have been', reward: 'secret_code' },
+        media: '<img src="assets/sir-henry.jpg" class="clue-img">',
+        choices: [{ text: 'Enter Study', next: 'scene_study', require: 'secret_code' }]
+    },
+    scene_study: {
+        title: 'The Study',
+        text: 'The desk is here.',
+        media: '<img src="assets/study.png" class="clue-img">',
+        choices: [{ text: 'Examine Diary', next: 'scene_study_desk' }]
+    },
+    scene_study_desk: {
+        title: 'Elizabeth\'s Diary',
+        text: 'Voice: "The Caretaker is watching..."',
+        onEnter: () => playSound('diary-voice'),
+        media: '<img src="assets/diary-mystical.png" class="clue-img">',
+        choices: [{ text: 'Find Trapdoor', next: 'scene_trapdoor', require: 'library_clue' }]
+    },
+    scene_trapdoor: {
+        title: 'The Trapdoor',
+        text: 'A dark passage.',
+        media: '<img src="assets/trapdoor.png" class="clue-img">',
+        choices: [{ text: 'Go down', next: 'scene_basement' }]
+    },
+    scene_basement: {
+        title: 'The Basement',
+        text: 'Suddenly, a door slams!',
+        media: '<img src="assets/basement.png" class="clue-img">',
+        choices: [{ text: 'Who is there?', next: 'scene_caretaker' }]
+    },
+    scene_caretaker: {
+        title: 'The Caretaker',
+        text: '"I wish you ____ (not/find) this place."',
+        task: { question: 'Regret (Past):', options: ['hadn\'t found', 'didn\'t find'], correct: 'hadn\'t found', reward: 'caretaker_trust' },
+        media: '<img src="assets/caretaker.png" class="clue-img">',
+        choices: [{ text: 'Go to Attic', next: 'scene_attic', require: 'caretaker_trust' }]
+    },
+    scene_attic: {
+        title: 'The Attic',
+        text: 'You see Elizabeth.',
+        onEnter: () => playSound('footsteps'),
+        media: '<img src="assets/attic.png" class="clue-img">',
+        choices: [{ text: 'Approach her', next: 'scene_elizabeth_reveal' }]
+    },
     scene_elizabeth_reveal: {
-        title: 'The Reveal',
-        text: 'Elizabeth whispers three secrets. Secret 1: "I ____ (wait) for you for hours!"',
-        task: { 
-            question: 'Task 1: Present Perfect Continuous:', 
-            options: ['have been waiting', 'am waiting', 'was waiting'], 
-            correct: 'have been waiting', 
-            reward: 'eliz_1' 
-        },
+        title: 'Elizabeth',
+        text: '"Detective? We must leave. Now."',
         media: '<img src="assets/elizabeth.png" class="clue-img">',
-        choices: [{ text: 'Listen to Secret 2', next: 'scene_eliz_2', require: 'eliz_1' }]
+        choices: [{ text: 'FINISH EPISODE I', next: 'scene_final' }]
     },
-    scene_eliz_2: {
-        title: 'The Reveal - Secret 2',
-        text: '"If you hadn\'t come, I ____ (be) lost."',
-        task: { 
-            question: 'Task 2: Mixed Conditional:', 
-            options: ['would be', 'will be', 'am'], 
-            correct: 'would be', 
-            reward: 'eliz_2' 
-        },
-        choices: [{ text: 'Listen to Final Secret', next: 'scene_eliz_3', require: 'eliz_2' }]
-    },
-    scene_eliz_3: {
-        title: 'The Reveal - Final Secret',
-        text: '"It\'s time to leave. We ____ (follow) as we speak!"',
-        task: { 
-            question: 'Task 3: Present Continuous Passive:', 
-            options: ['are being followed', 'are followed', 'were followed'], 
-            correct: 'are being followed', 
-            reward: 'final_clue' 
-        },
-        choices: [{ text: 'ESCAPE TOGETHER', next: 'scene_final', require: 'final_clue' }]
-    },
-
-    scene_final: { title: 'Episode I Complete', text: 'Masterfully done, Detective! Elizabeth is safe... for now.', choices: [{ text: 'Restart', next: 'scene1' }] }
+    scene_final: { title: 'To Be Continued', text: 'Episode II coming soon.', choices: [{ text: 'Restart', next: 'scene1' }] }
 };
 
 
