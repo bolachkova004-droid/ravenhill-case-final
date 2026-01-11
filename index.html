@@ -53,11 +53,15 @@
         let inventory = new Set();
         let score = 0;
 
-        const itemNames = {
-            'gate_clue': '🔍 Gate Clue', 'silver_key': '🗝️ Silver Key', 'garden_clue': '🌹 Garden Note',
-            'lib_clue': '📖 Library Note', 'kitchen_clue': '🧪 Poison Residue', 'trust': '🤝 Housekeeper Trust',
-            'code': '🔢 Cabinet Code', 'diary_unlocked': '📓 Elizabeth\'s Diary', 'cell_key': '🔑 Cell Key', 'truth': '✨ The Truth'
-        };
+      const itemNames = {
+    'gate_1': '🔍 Gate Clue', 'gate_2': '⚙️ Lock Hint', 'gate_clue': '📜 Entry Permit',
+    'garden_1': '🌹 Rose Petal', 'box_1': '🔓 Layer 1', 'silver_key': '🗝️ Silver Key',
+    'lib_1': '📖 Dust Hint', 'lib_2': '📜 Cipher', 'lib_clue': '🗺️ Secret Map',
+    'kit_1': '🍽️ Tray Detail', 'kit_2': '🧪 Poison Info', 'kitchen_clue': '🔬 Chemical Trace',
+    'trust': '🤝 Trust', 'code': '🔢 Cabinet Code', 'diary_unlocked': '📓 Elizabeth\'s Diary',
+    'cell_key': '🔑 Cell Key', 'truth': '✨ The Truth'
+};
+
 
         function playSound(id) {
             const audio = document.getElementById(id);
