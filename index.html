@@ -6,24 +6,22 @@
     <title>Ravenhill: The Case | Episode I</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Финальные штрихи верстки */
+        /* Финальные исправления дизайна */
         #game-container { animation: fadeIn 0.8s ease-in-out; max-width: 900px; margin: 0 auto; padding: 20px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .choices { margin: 40px 0 80px 0 !important; gap: 15px; display: flex; justify-content: center; flex-wrap: wrap; width: 100%; }
-        .clue-img { width: 100%; max-height: 40vh; object-fit: cover; border-radius: 4px; display: block; margin: 0 auto 20px auto; background: #111; border: 2px solid rgba(199, 175, 139, 0.3); }
-        .task-question { width: 100%; text-align: center; font-family: 'Cinzel', serif; color: #c7af8b; font-size: 1.1rem; margin-bottom: 20px; }
+        .choices { margin: 30px 0 80px 0 !important; gap: 15px; display: flex; justify-content: center; flex-wrap: wrap; width: 100%; }
+        .clue-img { width: 100%; max-height: 50vh; object-fit: contain; border-radius: 4px; display: block; margin: 0 auto 20px auto; background: #050505; border: 1px solid rgba(199, 175, 139, 0.2); }
+        .task-question { width: 100%; text-align: center; font-family: 'Cinzel', serif; color: #c7af8b; font-size: 1.1rem; margin-bottom: 20px; background: rgba(199, 175, 139, 0.1); padding: 15px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- Стартовый экран -->
     <div id="start-screen" class="start-screen">
         <h1 class="start-title">RAVENHILL</h1>
         <p class="start-subtitle">THE CASE: EPISODE I</p>
         <button class="start-btn" onclick="startGame()">Enter the Manor</button>
     </div>
 
-    <!-- Игровое окно -->
     <div id="game-container" style="display: none;">
         <div class="scene">
             <div class="case-file">Case File #01</div>
@@ -46,29 +44,24 @@
         </div>
     </div>
 
-    <!-- Звуки -->
-    <audio id="bgMusic" loop src="assets/mystery-loop.mp3" preload="auto"></audio>
-    <audio id="uiClick" src="assets/click1.wav" preload="auto"></audio>
-    <audio id="radioSound" src="assets/radio-message.wav" preload="auto"></audio>
-    <audio id="footsteps" src="assets/footsteps.mp3" preload="auto"></audio>
-    <audio id="diary-voice" src="assets/diary-voice.mp3" preload="auto"></audio>
+    <audio id="bgMusic" loop src="assets/mystery-loop.mp3"></audio>
+    <audio id="uiClick" src="assets/click1.wav"></audio>
+    <audio id="radioSound" src="assets/radio-message.wav"></audio>
+    <audio id="footsteps" src="assets/footsteps.mp3"></audio>
+    <audio id="diary-voice" src="assets/diary-voice.mp3"></audio>
 
     <script>
         let inventory = new Set();
         let score = 0;
 
         const itemNames = {
-            'gate_clue_1': '🔍 Gate Analysis', 'gate_clue_2': '⚙️ Lock Mechanism', 'access_hint': '📜 Entry Permit',
-            'garden_clue': '🌹 Garden Note', 'box_1': '🔓 Box Layer 1', 'box_2': '🔓 Box Layer 2',
-            'silver_key': '🗝️ Silver Key', 'housekeeper_trust': '🤝 Housekeeper Trust',
-            'lib_1': '📖 Library Note', 'lib_2': '📜 Secret Cipher', 'library_clue': '🗺️ Secret Map',
-            'poison_clue': '🧪 Poison Residue', 'secret_code': '🔢 Cabinet Code',
-            'diary_unlocked': '📓 Elizabeth\'s Diary', 'caretaker_trust': '🔑 Cell Key'
+            'gate_clue_1': '🔍 Gate Clue', 'lib_1': '📖 Library Note', 'kitchen_1': '🧪 Kitchen Clue',
+            'housekeeper_trust': '🤝 Trust', 'secret_code': '🔢 Code', 'final_clue': '✨ Truth'
         };
 
         function playSound(id) {
             const audio = document.getElementById(id);
-            if (audio) { audio.pause(); audio.currentTime = 0; audio.play().catch(e => {}); }
+            if (audio) { audio.currentTime = 0; audio.play().catch(e => {}); }
         }
 
         function updateStatus() {
@@ -85,171 +78,113 @@
             renderScene('scene1');
         }
 
-      const scenes = {
-    // --- ГЛАВА 1: ПЕРЕД ОСОБНЯКОМ ---
-    scene1: {
-        title: 'The Iron Gates',
-        text: 'The massive iron gates of Ravenhill stand as a silent barrier between you and the truth. You must <b>find out</b> whether anyone has entered the manor since the disappearance.',
-        task: { 
-            question: 'Context Check: Which phrase best replaces "find out" in this formal investigation?', 
-            options: ['Ascertain the facts', 'Look out for clues', 'Get over the problem'], 
-            correct: 'Ascertain the facts', 
-            reward: 'gate_clue_1' 
-        },
-        media: '<img src="assets/gates.png" class="clue-img">',
-        choices: [{ text: 'Examine the Entrance', next: 'scene1_task2', require: 'gate_clue_1' }]
-    },
-
-    // --- БИБЛИОТЕКА (Расширенная) ---
-    scene_library: {
-        title: 'The Great Library',
-        text: 'Dust motes dance in the dim light of the library, where thousands of books keep their secrets. You notice a leather-bound volume that ____ (not/touch) for decades.',
-        task: { 
-            question: 'Task 1: Complete the Passive structure (Past):', 
-            options: ['had not been touched', 'was not touching', 'has not touched'], 
-            correct: 'had not been touched', 
-            reward: 'lib_1' 
-        },
-        media: '<img src="assets/library.png" class="clue-img">',
-        choices: [{ text: 'Examine the Secret Note', next: 'scene_library_2', require: 'lib_1' }]
-    },
-    scene_library_2: {
-        title: 'A Hidden Message',
-        text: 'You find a scrap of paper. Elizabeth wrote: "If Sir Henry ____ (be) more careful with his associations, he wouldn\'t be in this danger now."',
-        task: { 
-            question: 'Task 2: Choose the Mixed Conditional (Regret about the past):', 
-            options: ['had been', 'was', 'would be'], 
-            correct: 'had been', 
-            reward: 'lib_2' 
-        },
-        media: '<img src="assets/library.png" class="clue-img">',
-        choices: [{ text: 'Analyze the Symbols', next: 'scene_library_3', require: 'lib_2' }]
-    },
-
-    // --- КУХНЯ (Расширенная) ---
-    scene_kitchen: {
-        title: 'The Cold Kitchen',
-        text: 'The air in the kitchen is heavy with the faint scent of bitter almonds. It appears that the dinner ____ (prepare) just before the tragedy occurred.',
-        task: { 
-            question: 'Task 1: Choose the Past Continuous Passive:', 
-            options: ['was being prepared', 'was preparing', 'had prepared'], 
-            correct: 'was being prepared', 
-            reward: 'kitchen_1' 
-        },
-        media: '<img src="assets/kitchen.png" class="clue-img">',
-        choices: [{ text: 'Examine the Tea Tray', next: 'scene_kitchen_2', require: 'kitchen_1' }]
-    },
-
-    // --- ПОДВАЛ И СТОРОЖ (Сложные задания) ---
-    scene_caretaker: {
-        title: 'The Confrontation',
-        text: 'The Caretaker’s lantern flickers, casting long, menacing shadows. "I wish you ____ (not/come) here, Detective. Some secrets are meant to stay buried."',
-        task: { 
-            question: 'Task 1: Wish about a past regret:', 
-            options: ['hadn\'t come', 'didn\'t come', 'wouldn\'t come'], 
-            correct: 'hadn\'t come', 
-            reward: 'caretaker_1' 
-        },
-        media: '<img src="assets/caretaker.png" class="clue-img">',
-        choices: [{ text: 'Challenge his story', next: 'scene_caretaker_2', require: 'caretaker_1' }]
-    },
-    scene_caretaker_2: {
-        title: 'The Caretaker\'s Secret',
-        text: 'He trembles under your gaze. "The master ____ (watch) by someone much more dangerous than me for a long time," he whispers.',
-        task: { 
-            question: 'Task 2: Passive Voice with Modal:', 
-            options: ['must have been watched', 'must be watching', 'should watch'], 
-            correct: 'must have been watched', 
-            reward: 'caretaker_trust' 
-        },
-        media: '<img src="assets/caretaker.png" class="clue-img">',
-        choices: [{ text: 'Climb to the Attic', next: 'scene_attic', require: 'caretaker_trust' }]
-    },
-
-    // --- ФИНАЛ: ЧЕРДАК И ЭЛИЗАБЕТ ---
-    scene_attic: {
-        title: 'The Attic',
-        text: 'The moonlight pours through the circular window. You see a figure standing in the shadows, looking at the distant stars.',
-        onEnter: () => playSound('footsteps'),
-        media: '<img src="assets/attic.png" class="clue-img">',
-        choices: [{ text: 'Speak to Elizabeth', next: 'scene_elizabeth_reveal' }]
-    },
-    scene_elizabeth_reveal: {
-        title: 'The Truth Unveiled',
-        text: 'Elizabeth turns around, her eyes wide with relief. "Detective, I ____ (wait) for someone to understand the messages I left in the library."',
-        task: { 
-            question: 'Task 1: Present Perfect Continuous (Action continuing until now):', 
-            options: ['have been waiting', 'was waiting', 'had waited'], 
-            correct: 'have been waiting', 
-            reward: 'eliz_1' 
-        },
-        media: '<img src="assets/elizabeth.png" class="clue-img">',
-        choices: [{ text: 'Listen to her warning', next: 'scene_eliz_final', require: 'eliz_1' }]
-    },
-    scene_eliz_final: {
-        title: 'A Deadly Warning',
-        text: '"If we don\'t leave Ravenhill before dawn, we ____ (not/give) another chance to escape," she warns.',
-        task: { 
-            question: 'Task 2: Future Passive Negative:', 
-            options: ['won\'t be given', 'won\'t give', 'aren\'t given'], 
-            correct: 'won\'t be given', 
-            reward: 'final_clue' 
-        },
-        media: '<img src="assets/elizabeth.png" class="clue-img">',
-        choices: [{ text: 'ESCAPE THE MANOR (END EPISODE I)', next: 'scene_final', require: 'final_clue' }]
-    },
-    scene_final: { 
-        title: 'To Be Continued', 
-        text: 'You have found Elizabeth, but the mystery of Sir Henry remains. The manor is surrounded. Episode II: The Escape begins soon.', 
-        choices: [{ text: 'Restart Adventure', next: 'scene1' }] 
-    }
-};
-
+        const scenes = {
+            scene1: {
+                title: 'The Iron Gates',
+                text: 'The massive iron gates of Ravenhill stand as a silent barrier. You must <b>find out</b> what happened here.',
+                task: { 
+                    question: 'Synonym for "find out":', 
+                    options: ['Discover', 'Close', 'Ignore'], 
+                    correct: 'Discover', 
+                    reward: 'gate_clue_1' 
+                },
+                media: '<img src="assets/gates.png" class="clue-img">',
+                choices: [{ text: 'Examine the Hall', next: 'scene2_hall', require: 'gate_clue_1' }]
+            },
+            scene2_hall: {
+                title: 'The Grand Hall',
+                text: 'The manor is cold. You must gather clues.',
+                media: '<video src="assets/hall-intro.mp4" autoplay loop muted class="clue-img"></video>',
+                choices: [
+                    { text: 'Go to Library', next: 'scene_library' },
+                    { text: 'Check Kitchen', next: 'scene_kitchen' },
+                    { text: 'Talk to Housekeeper', next: 'scene_housekeeper' }
+                ]
+            },
+            scene_library: {
+                title: 'The Library',
+                text: 'The room ____ (not/touch) for years.',
+                task: { question: 'Passive Voice:', options: ['had not been touched', 'was not touching'], correct: 'had not been touched', reward: 'lib_1' },
+                media: '<img src="assets/library.png" class="clue-img">',
+                choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+            },
+            scene_kitchen: {
+                title: 'The Kitchen',
+                text: 'Dinner ____ (prepare) when the crime occurred.',
+                task: { question: 'Passive Continuous:', options: ['was being prepared', 'was preparing'], correct: 'was being prepared', reward: 'kitchen_1' },
+                media: '<img src="assets/kitchen.png" class="clue-img">',
+                choices: [{ text: 'Back to Hall', next: 'scene2_hall' }]
+            },
+            scene_housekeeper: {
+                title: 'The Housekeeper',
+                text: '"Sir Henry ____ (watch) us for years!"',
+                task: { question: 'Tense:', options: ['has been watching', 'is watching'], correct: 'has been watching', reward: 'housekeeper_trust' },
+                media: '<img src="assets/housekeeper.png" class="clue-img">',
+                choices: [{ text: 'Ask about Elizabeth', next: 'scene_attic', require: 'housekeeper_trust' }]
+            },
+            scene_attic: {
+                title: 'The Attic',
+                text: 'You see Elizabeth in the shadows.',
+                onEnter: () => playSound('footsteps'),
+                media: '<img src="assets/attic.png" class="clue-img">',
+                choices: [{ text: 'Speak to her', next: 'scene_elizabeth_reveal' }]
+            },
+            scene_elizabeth_reveal: {
+                title: 'Elizabeth',
+                text: '"Detective, I ____ (wait) for you!"',
+                task: { question: 'Tense:', options: ['have been waiting', 'am waiting'], correct: 'have been waiting', reward: 'final_clue' },
+                media: '<img src="assets/elizabeth.png" class="clue-img">',
+                choices: [{ text: 'END EPISODE I', next: 'scene_final', require: 'final_clue' }]
+            },
+            scene_final: { title: 'To Be Continued', text: 'Episode II coming soon.', choices: [{ text: 'Restart', next: 'scene1' }] }
+        };
 
         function renderScene(sceneId) {
             const scene = scenes[sceneId];
             if (!scene) return;
+
+            const choiceBox = document.getElementById('choices-container');
+            choiceBox.innerHTML = '';
             document.getElementById('scene-title').innerText = scene.title;
             document.getElementById('scene-text').innerHTML = scene.text;
             document.getElementById('media-container').innerHTML = scene.media || '';
-            document.getElementById('dictionary-display').innerHTML = scene.english || 'Keep searching...';
+            
             if (scene.onEnter) scene.onEnter();
             updateStatus();
-            const choiceBox = document.getElementById('choices-container');
-            choiceBox.innerHTML = '';
+
             if (scene.task && !inventory.has(scene.task.reward)) {
                 renderTask(scene.task, choiceBox, sceneId);
             } else {
-                scene.choices.forEach(choice => {
-                    if (!choice.require || inventory.has(choice.require)) {
-                        const btn = document.createElement('button');
-                        btn.innerText = choice.text;
-                        btn.className = 'choice-btn';
-                        btn.onclick = () => { playSound('uiClick'); renderScene(choice.next); };
-                        choiceBox.appendChild(btn);
+                scene.choices.forEach(c => {
+                    if (!c.require || inventory.has(c.require)) {
+                        const b = document.createElement('button');
+                        b.innerText = c.text;
+                        b.className = 'choice-btn';
+                        b.onclick = () => { playSound('uiClick'); renderScene(c.next); };
+                        choiceBox.appendChild(b);
                     }
                 });
             }
         }
 
         function renderTask(task, container, sceneId) {
-            const q = document.createElement('p');
-            q.className = 'task-question';
-            q.innerHTML = `TASK: ${task.question}`;
-            container.appendChild(q);
+            const p = document.createElement('p');
+            p.className = 'task-question';
+            p.innerHTML = `TASK: ${task.question}`;
+            container.appendChild(p);
             task.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.innerText = opt;
-                btn.className = 'choice-btn';
-                btn.onclick = () => {
+                const b = document.createElement('button');
+                b.innerText = opt;
+                b.className = 'choice-btn';
+                b.onclick = () => {
                     playSound('uiClick');
                     if (opt === task.correct) {
                         inventory.add(task.reward);
                         score += 10;
                         renderScene(sceneId);
-                    } else { alert("Wrong answer! Check your grammar."); }
+                    } else { alert("Try again!"); }
                 };
-                container.appendChild(btn);
+                container.appendChild(b);
             });
         }
     </script>
